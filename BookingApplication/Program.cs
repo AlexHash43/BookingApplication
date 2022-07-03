@@ -1,16 +1,28 @@
 
+using Contracts;
 using Entities;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Repository;
+using NLog;
+using Microsoft.AspNetCore.HttpOverrides;
+using BookingApplication.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 //// allows both to access and to set up the config
 //ConfigurationManager configuration = builder.Configuration; 
 //IWebHostEnvironment environment = builder.Environment;
 
-// Add services to the container.
+// Add services to the container..
+builder.Services.ConfigureCors();
+builder.Services.ConfigureIISIntegration();
+builder.Services.ConfigureLoggerService();
+builder.Services.ConfigureRepositoryWrapper();
+builder.Services.ConfigureHttpContextAccessor();
+
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppointmentContext>(options =>
 {
@@ -54,7 +66,9 @@ builder.Services.AddIdentityCore<User>()
 //{
 //    configuration.RootPath = "ClientApp/build";
 //});
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+//services.AddSingleton<ILoggerManager, LoggerManager>
+//builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 //builder.Services.AddSingleton<IJwtHandlerAuth>(new JwtHandlerAuth(Configuration.GetSection("Jwt:PrivateKey").Value));
 //builder.Services.AddScoped<IAppointmentsRepository, AppointmentsRepository>();
 //builder.Services.AddScoped<IUserService, UserService>();
@@ -79,6 +93,12 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
+
+app.UseCors("CorsPolicy");
 //app.UseStaticFiles();
 //app.UseSpaStaticFiles();
 app.UseRouting();
@@ -102,4 +122,5 @@ app.UseEndpoints(endpoints =>
 //        spa.UseReactDevelopmentServer(npmScript: "start");
 //    }
 //});
+app.MapControllers();
 app.Run();
