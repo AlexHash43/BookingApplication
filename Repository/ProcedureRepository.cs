@@ -14,5 +14,11 @@ namespace Repository
         public ProcedureRepository(AppointmentContext appointmentContext) : base(appointmentContext)
         {
         }
+
+        public IEnumerable<Procedure> GetAllProcedures()
+        {
+            return GetAll().OrderBy(pr => pr.ProcedureName).ToList();
+
+        }
     }
 }

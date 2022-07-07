@@ -45,5 +45,6 @@ namespace Repository
         public void Save()
         {
             _appointmentContext.SaveChanges();
+        }
     }
 }

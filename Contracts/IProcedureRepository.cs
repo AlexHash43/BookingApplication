@@ -9,5 +9,6 @@ namespace Contracts
 {
     public interface IProcedureRepository:IRepositoryBase<Procedure>
     {
+        IEnumerable<Procedure> GetAllProcedures();
     }
 }
