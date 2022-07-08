@@ -14,5 +14,10 @@ namespace Repository
         public AppointmentRepository(AppointmentContext appointmentContext) : base(appointmentContext)
         {
         }
+
+        public IEnumerable<Appointment> GetAllAppointments()
+        {
+            return GetAll().OrderBy(pr => pr.AppointmentStart).ToList();
+        }
     }
 }

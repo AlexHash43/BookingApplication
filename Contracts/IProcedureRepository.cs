@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Contracts
 {
-    public interface IProcedureRepository:IRepositoryBase<Procedure>
+    public interface IProcedureRepository: IRepositoryBase<Procedure>
     {
         IEnumerable<Procedure> GetAllProcedures();
     }

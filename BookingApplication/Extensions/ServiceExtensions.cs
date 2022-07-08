@@ -38,8 +38,12 @@ namespace BookingApplication.Extensions
             }
             
             public static void ConfigureHttpContextAccessor(this IServiceCollection services)
+            {
+                services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            }
+        public static void ConfigureAutoMapper(this IServiceCollection services)
         {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddAutoMapper(typeof(StartupBase));
         }
     }
 }

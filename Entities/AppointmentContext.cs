@@ -13,7 +13,7 @@ namespace Entities
     {
         public AppointmentContext(DbContextOptions<AppointmentContext> options) : base(options) { }
 
-        public override DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Procedure> ProcedureTypes { get; set; }
         //on tableCreation makes table names singular(whithout s)
@@ -25,8 +25,8 @@ namespace Entities
                 //modelBuilder.Entity<User>().Property(b => b.NormalizedEmail).IsRequired();
                 modelBuilder.Entity<User>().Property(b => b.UserName).IsRequired();
                 //modelBuilder.Entity<User>().Property(b => b.NormalizedUserName).IsRequired();
-                modelBuilder.Entity<User>().Property(b => b.PasswordHash).IsRequired();
-                modelBuilder.Entity<User>().Property(b => b.CreatedOn).IsRequired();
+                //modelBuilder.Entity<User>().Property(b => b.PasswordHash).IsRequired();
+                //modelBuilder.Entity<User>().Property(b => b.CreatedOn).IsRequired();
                 //modelBuilder.Entity<User>().Property(b => b.EmailConfirmed).IsRequired(false);
                 //modelBuilder.Entity<User>().Property(b => b.PhoneNumberConfirmed).IsRequired(false);
                 //modelBuilder.Entity<User>().Property(b => b.TwoFactorEnabled).IsRequired(false);

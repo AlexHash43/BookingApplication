@@ -12,19 +12,20 @@ namespace Entities.Models
     public class Appointment
     {
         [Key]
-        public string Id { get; set; }
+        [Column("AppointmentId")]
+        public string? Id { get; set; }
         public DateTime AppointmentStart { get; set; }
         //public DateTime End { get; set; }
         [ForeignKey(nameof(Procedure))]
         public int ProcedureId { get; set; }
-        public Procedure Procedure { get; set; }
+        public Procedure? Procedure { get; set; }
         //public ProcedureType PrType { get; set; }
         [ForeignKey(nameof(User))]
-        public string DoctorId { get; set; }
+        public string? DoctorId { get; set; }
         //public User Doctor { get; set; }
         [ForeignKey(nameof(User))]
-        public string PatientId { get; set; }
-        public User User { get; set; }
+        public string? PatientId { get; set; }
+        public User? User { get; set; }
         //public User Patient { get; set; }
         public DateTime CreatedOn { get; set; }
         public AppointmentStatus Status { get; set; }

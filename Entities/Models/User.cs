@@ -12,14 +12,14 @@ namespace Entities.Models
     {
 
         [StringLength(50), Display(Name = "First Name")]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
         [StringLength(50), Display(Name = "Last Name")]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
         [StringLength(100), Display(Name = "Full Name")]
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
         [StringLength(100), Display(Name = "Address")]
-        public string Address { get; set; }
+        public string? Address { get; set; }
         public DateTime CreatedOn { get; set; }
-        public virtual ICollection<Appointment> Appointments { get; set; }
+        public virtual ICollection<Appointment>? Appointments { get; set; }
     }
 }

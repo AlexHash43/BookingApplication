@@ -22,6 +22,7 @@ builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryWrapper();
 builder.Services.ConfigureHttpContextAccessor();
+builder.Services.ConfigureAutoMapper();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppointmentContext>(options =>

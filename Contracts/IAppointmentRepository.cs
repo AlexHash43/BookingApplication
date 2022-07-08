@@ -9,6 +9,6 @@ namespace Contracts
 {
     public interface IAppointmentRepository:IRepositoryBase<Appointment>
     {
-
+        IEnumerable<Appointment> GetAllAppointments();
     }
 }

@@ -18,7 +18,6 @@ namespace Repository
         public IEnumerable<Procedure> GetAllProcedures()
         {
             return GetAll().OrderBy(pr => pr.ProcedureName).ToList();
-
         }
     }
 }
