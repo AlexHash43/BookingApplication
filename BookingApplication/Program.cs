@@ -24,7 +24,7 @@ builder.Services.ConfigureRepositoryWrapper();
 builder.Services.ConfigureHttpContextAccessor();
 builder.Services.ConfigureAutoMapper();
 
-builder.Services.AddControllers();
+
 builder.Services.AddDbContext<AppointmentContext>(options =>
 {
     if (!options.IsConfigured) options.UseSqlServer(builder.Configuration.GetConnectionString("Stomatology"));
@@ -32,9 +32,10 @@ builder.Services.AddDbContext<AppointmentContext>(options =>
 builder.Services.AddIdentityCore<User>()
             //var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<AppointmentContext>()
-            .AddSignInManager<SignInManager<User>>()
-            .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<AppointmentContext>();
+            //.AddSignInManager<SignInManager<User>>();
+            //.AddDefaultTokenProviders();
+builder.Services.AddControllers();
 
 //builder.Services.AddAuthentication(x =>
 //{

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    public class RepositoryWrapper:IRepositoryWrapper
+    public class RepositoryWrapper : IRepositoryWrapper
     {
         private AppointmentContext _appointmentContext;
         private IAppointmentRepository _appointment;
@@ -36,11 +36,11 @@ namespace Repository
                 return _procedure;
             }
         }
-        public RepositoryWrapper(AppointmentContext appointmentContext, IAppointmentRepository appointment, IProcedureRepository procedure)
+        public RepositoryWrapper(AppointmentContext appointmentContext)//, IAppointmentRepository appointment, IProcedureRepository procedure)
         {
             _appointmentContext = appointmentContext;
-            _appointment = appointment;
-            _procedure = procedure;
+            //_appointment = appointment;
+            //_procedure = procedure;
         }
         public void Save()
         {
