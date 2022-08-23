@@ -4,6 +4,7 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingApplication.Controllers
 {
@@ -22,14 +23,23 @@ namespace BookingApplication.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetAllProcedures()
+        public async Task<IActionResult> GetAllProcedures()
         {
             try
             {
-                var procedures = _repository.Procedure.GetAllProcedures();
-                _logger.LogInfo("Returned all owners from Database");
-                var proceduresResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedures);
-                return Ok(proceduresResult);
+                var procedures = await _repository.Procedure.GetAllProceduresAsync();
+                if(procedures.Any())
+                {
+                    _logger.LogInfo("Returned all procedures from Database");
+                    var proceduresResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedures);
+                    return Ok(proceduresResult);
+                }
+                else
+                {
+                    _logger.LogInfo("No procedures in the Database");
+                    return BadRequest();
+                }
+
             }
             catch(Exception ex)
             {
@@ -38,18 +48,48 @@ namespace BookingApplication.Controllers
             }
         }
         [HttpGet("{id}")]
-        public IActionResult GetProcedureById(Guid Id)
+        public async Task<IActionResult> GetProcedureById(Guid id)
         {
             try
-            {
-                var procedure = _repository.Procedure.GetByCondition(x => x.Id == Id);
-                var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedure);
-                return Ok(procedureResult);
+            { 
+                var procedure = await _repository.Procedure.GetProcedureByIdAsync(id);
+                if (procedure != null)
+                {
+                    _logger.LogInfo($"Returned procedure by Id {id} from Database");
+                    var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedure);
+                    return Ok(procedureResult);
+                }
+                else 
+                {
+                    _logger.LogInfo($"No procedure by Id {id} in the Database");
+                    return BadRequest(); 
+                }
+
             }
             catch (Exception ex)
             {
                 _logger.LogError($"GetProcedureById Failed: {ex.Message}");
-                return StatusCode(500, $"Internal Server Error");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
+        }
+        [HttpPut]
+        public async Task<IActionResult> UpdateProcedure(Procedure procedure)
+        {
+            try
+            {
+                _repository.Procedure.Update(procedure);
+                var result = await _repository.SaveAsync();
+                if (result != 0)
+                {
+                    var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedure);
+                    return Ok(procedureResult);
+                }
+                else { return BadRequest(); }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Update Procedure Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
             }
         }
     }

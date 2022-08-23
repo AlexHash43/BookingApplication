@@ -30,7 +30,7 @@ namespace Repository
 
         public void Create(T entity)
         {
-            _appointmentContext.Set<T>().Add(entity);
+            _appointmentContext.Set<T>().AddAsync(entity);
         }
 
         public void Update(T entity)

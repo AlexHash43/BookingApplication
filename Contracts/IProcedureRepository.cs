@@ -9,6 +9,12 @@ namespace Contracts
 {
     public interface IProcedureRepository: IRepositoryBase<Procedure>
     {
-        IEnumerable<Procedure> GetAllProcedures();
+        Task <IEnumerable<Procedure>> GetAllProceduresAsync();
+        Task<Procedure> GetProcedureByIdAsync(Guid id);
+        Task<Procedure> GetProcedureByNameAsync(string name);
+        //Task<Procedure> UpdateProcedureAsync(Procedure procedure);
+        //Task DeleteProcedureAsync(Procedure procedure);
+        //Task<Procedure> CreateProcedureAsync(Procedure procedure);
+
     }
 }

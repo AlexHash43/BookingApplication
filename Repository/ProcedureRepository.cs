@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,34 @@ namespace Repository
         {
         }
 
-        public IEnumerable<Procedure> GetAllProcedures()
+        public async  Task<IEnumerable<Procedure>> GetAllProceduresAsync()
         {
-            return GetAll().OrderBy(pr => pr.ProcedureName).ToList();
+            return await GetAll().OrderBy(pr => pr.ProcedureName).ToListAsync();
         }
+
+        public async Task<Procedure> GetProcedureByIdAsync(Guid id)
+        {
+            return await GetByCondition(pr => pr.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<Procedure> GetProcedureByNameAsync(string name)
+        {
+            return await GetByCondition(pr => pr.ProcedureName == name).FirstOrDefaultAsync();
+        }
+
+        //public void UpdateProcedureAsync(Procedure procedure)
+        //{
+        //    Update(procedure);
+        //    //return  await GetByCondition(pr => pr.Id == procedure.Id).FirstOrDefaultAsync();
+        //}
+        //public void CreateProcedureAsync(Procedure procedure)
+        //{
+        //    Create(procedure);
+        //    //return await GetByCondition(pr => pr.Id == procedure.Id).FirstOrDefaultAsync();
+        //}
+        //public void DeleteProcedureAsync(Procedure procedure)
+        //{
+        //    Delete(procedure);
+        //}
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,9 +43,10 @@ namespace Repository
             //_appointment = appointment;
             //_procedure = procedure;
         }
-        public void Save()
+        public async Task<int> SaveAsync()
         {
-            _appointmentContext.SaveChanges();
+           return await _appointmentContext.SaveChangesAsync();
+            
         }
     }
 }
