@@ -13,7 +13,7 @@ namespace Entities.Models
     {
         [Key]
         [Column("AppointmentId")]
-        public string? Id { get; set; }
+        public Guid? Id { get; set; }
         public DateTime AppointmentStart { get; set; }
         //public DateTime End { get; set; }
         [ForeignKey(nameof(Procedure))]

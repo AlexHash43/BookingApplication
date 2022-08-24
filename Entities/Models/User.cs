@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Models
 {
-    public class User : IdentityUser
+    public class User : IdentityUser<Guid>
     {
 
         [StringLength(50), Display(Name = "First Name")]

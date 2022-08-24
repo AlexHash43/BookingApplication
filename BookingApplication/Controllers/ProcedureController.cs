@@ -28,7 +28,7 @@ namespace BookingApplication.Controllers
             try
             {
                 var procedures = await _repository.Procedure.GetAllProceduresAsync();
-                if(procedures.Any())
+                if (procedures.Any())
                 {
                     _logger.LogInfo("Returned all procedures from Database");
                     var proceduresResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedures);
@@ -41,7 +41,7 @@ namespace BookingApplication.Controllers
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"GetAllProcedures Failed: {ex.Message}");
                 return StatusCode(500, $"Internal Sertver Error: {ex.Message}");
@@ -51,7 +51,7 @@ namespace BookingApplication.Controllers
         public async Task<IActionResult> GetProcedureById(Guid id)
         {
             try
-            { 
+            {
                 var procedure = await _repository.Procedure.GetProcedureByIdAsync(id);
                 if (procedure != null)
                 {
@@ -59,16 +59,40 @@ namespace BookingApplication.Controllers
                     var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedure);
                     return Ok(procedureResult);
                 }
-                else 
+                else
                 {
-                    _logger.LogInfo($"No procedure by Id {id} in the Database");
-                    return BadRequest(); 
+                    _logger.LogInfo($"No procedure with Id: {id} was found in the Database");
+                    return BadRequest();
                 }
 
             }
             catch (Exception ex)
             {
                 _logger.LogError($"GetProcedureById Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateProcedure(Procedure procedure)
+        {
+            try
+            {
+                _repository.Procedure.Create(procedure);
+                var result = await _repository.SaveAsync();
+                if (result != 0)
+                {
+                    var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedure);
+                    return Ok(procedureResult);
+                }
+                else
+                {
+                    _logger.LogInfo($"Creating procedure {procedure.ProcedureName} in the Database failed ");
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Creating Procedure Failed: {ex.Message}");
                 return StatusCode(500, $"Internal Server Error:{ex.Message}");
             }
         }
@@ -84,9 +108,37 @@ namespace BookingApplication.Controllers
                     var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedure);
                     return Ok(procedureResult);
                 }
-                else { return BadRequest(); }
+                else
+                {
+                    _logger.LogInfo($"Updating procedure {procedure.ProcedureName} in the Database failed ");
+                    return BadRequest();
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                _logger.LogError($"Update Procedure Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
+        }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteProcedure(Procedure procedure)
+        {
+            try
+            {
+                _repository.Procedure.Delete(procedure);
+                var result = await _repository.SaveAsync();
+                if (result != 0)
+                {
+                    var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedure);
+                    return Ok(procedureResult);
+                }
+                else
+                {
+                    _logger.LogInfo($"Deleting procedure {procedure.ProcedureName} in the Database failed ");
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
             {
                 _logger.LogError($"Update Procedure Failed: {ex.Message}");
                 return StatusCode(500, $"Internal Server Error:{ex.Message}");

@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Entities
 {
-    public  class AppointmentContext: IdentityDbContext<User>
+    public  class AppointmentContext: IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public AppointmentContext(DbContextOptions<AppointmentContext> options) : base(options) { }
 
