@@ -27,14 +27,14 @@ builder.Services.ConfigureAutoMapper();
 
 builder.Services.AddDbContext<AppointmentContext>(options =>
 {
-    if (!options.IsConfigured) options.UseSqlServer(builder.Configuration.GetConnectionString("Stomatology"));
+    if (!options.IsConfigured) options.UseSqlServer(builder.Configuration.GetConnectionString("Stomatology"), opts => opts.MigrationsAssembly("BookingApplication"));
 });
-builder.Services.AddIdentityCore<User>()
+builder.Services.AddIdentity<User, IdentityRole<Guid>>()
             //var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<AppointmentContext>();
+            //.AddRoles<IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<AppointmentContext>()
             //.AddSignInManager<SignInManager<User>>();
-            //.AddDefaultTokenProviders();
+            .AddDefaultTokenProviders();
 builder.Services.AddControllers();
 
 //builder.Services.AddAuthentication(x =>

@@ -14,9 +14,24 @@ namespace Entities
     {
         public AppointmentContext(DbContextOptions<AppointmentContext> options) : base(options) { }
 
-        //public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Procedure> ProcedureTypes { get; set; }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Appointment>()
+        //                .HasRequired(m => m.Doctor)
+        //                .WithMany(t => t.DoctorAppointments)
+        //                .HasForeignKey(m => m.DoctorId)
+        //                .WillCascadeOnDelete(false);
+
+        //    modelBuilder.Entity<Appointment>()
+        //                .HasRequired(m => m.Patient)
+        //                .WithMany(t => t.PatientAppointments)
+        //                .HasForeignKey(m => m.PatientId)
+        //                .WillCascadeOnDelete(false);
+        //}
         //on tableCreation makes table names singular(whithout s)
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
