@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Entities.DataTransferObjects
 {
-    public class ProcedureDto
+    public class ProcedureForUpdateDto
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         [Required(ErrorMessage = "Procedure name is required")]
         [StringLength(50, ErrorMessage = "Procedure name can't be longer than 50 characters"), Display(Name = "Procedure Name")]
         public string? ProcedureName { get; set; }

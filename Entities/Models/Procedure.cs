@@ -11,10 +11,11 @@ namespace Entities.Models
     public class Procedure
     {
         [Key]
-        [Column("ProcedureId")]
+        //[Column("ProcedureId")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        [Required, StringLength(50, ErrorMessage = "Procedure name can't be longer than 50 characters"), Display(Name = "Procedure Name")]
+        [Required(ErrorMessage = "Procedure name is required")]
+        [StringLength(50, ErrorMessage = "Procedure name can't be longer than 50 characters"), Display(Name = "Procedure Name")]
         public string? ProcedureName { get; set; }
         [InverseProperty(nameof(Appointment.AppointmentProcedure))]
         public virtual ICollection<Appointment>? AppointmentProcedures { get; set; }

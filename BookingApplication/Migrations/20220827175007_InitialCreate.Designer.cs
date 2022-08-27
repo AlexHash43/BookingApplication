@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingApplication.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20220825155800_InitialCreate")]
+    [Migration("20220827175007_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,10 +26,12 @@ namespace BookingApplication.Migrations
 
             modelBuilder.Entity("Entities.Models.Appointment", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("AppointmentId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("AppointmentStart")
                         .HasColumnType("datetime2");
@@ -43,7 +45,7 @@ namespace BookingApplication.Migrations
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ProcedureId")
+                    b.Property<Guid>("ProcedureId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -64,8 +66,7 @@ namespace BookingApplication.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ProcedureId");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ProcedureName")
                         .IsRequired()
@@ -74,7 +75,7 @@ namespace BookingApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProcedureTypes");
+                    b.ToTable("Procedure");
                 });
 
             modelBuilder.Entity("Entities.Models.User", b =>
@@ -298,18 +299,20 @@ namespace BookingApplication.Migrations
                     b.HasOne("Entities.Models.User", "DoctorAppointment")
                         .WithMany("DoctorAppointments")
                         .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Models.User", "PatientAppointment")
                         .WithMany("PatientAppointments")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Models.Procedure", "AppointmentProcedure")
                         .WithMany("AppointmentProcedures")
-                        .HasForeignKey("ProcedureId");
+                        .HasForeignKey("ProcedureId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("AppointmentProcedure");
 
@@ -323,7 +326,7 @@ namespace BookingApplication.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -332,7 +335,7 @@ namespace BookingApplication.Migrations
                     b.HasOne("Entities.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -341,7 +344,7 @@ namespace BookingApplication.Migrations
                     b.HasOne("Entities.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -350,13 +353,13 @@ namespace BookingApplication.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -365,7 +368,7 @@ namespace BookingApplication.Migrations
                     b.HasOne("Entities.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

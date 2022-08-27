@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities;
+using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,7 +29,7 @@ namespace Repository
 
         public async Task<Procedure> GetProcedureByNameAsync(string name)
         {
-            return await GetByCondition(pr => pr.ProcedureName == name).FirstOrDefaultAsync();
+            return await GetByCondition(pr => pr.ProcedureName.ToLower() == name.ToLower()).FirstOrDefaultAsync();
         }
 
         //public void UpdateProcedureAsync(Procedure procedure)
@@ -36,11 +37,10 @@ namespace Repository
         //    Update(procedure);
         //    //return  await GetByCondition(pr => pr.Id == procedure.Id).FirstOrDefaultAsync();
         //}
-        //public void CreateProcedureAsync(Procedure procedure)
-        //{
-        //    Create(procedure);
-        //    //return await GetByCondition(pr => pr.Id == procedure.Id).FirstOrDefaultAsync();
-        //}
+        public void CreateProcedure(Procedure procedure)
+        {
+            Create(procedure);
+        }
         //public void DeleteProcedureAsync(Procedure procedure)
         //{
         //    Delete(procedure);

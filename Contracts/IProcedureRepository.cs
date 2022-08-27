@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.DataTransferObjects;
+using Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Contracts
         Task<Procedure> GetProcedureByNameAsync(string name);
         //Task<Procedure> UpdateProcedureAsync(Procedure procedure);
         //Task DeleteProcedureAsync(Procedure procedure);
-        //Task<Procedure> CreateProcedureAsync(Procedure procedure);
+        void CreateProcedure(Procedure procedure);
 
     }
 }
