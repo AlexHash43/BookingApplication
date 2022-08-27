@@ -16,7 +16,32 @@ namespace Entities
 
         public DbSet<User> Users { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Procedure> ProcedureTypes { get; set; }
+        public DbSet<Procedure> Procedure { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder) 
+        {
+            modelBuilder.Entity<Appointment>()
+                .HasOne(e => e.DoctorAppointment)
+                .WithMany(m => m.DoctorAppointments)
+                .HasForeignKey(x => x.DoctorId)
+                .OnDelete(DeleteBehavior.Restrict);
+            //.OnDelete(DeleteBehavior.ClientCascade); 
+
+            modelBuilder.Entity<Appointment>()
+                .HasOne(e => e.PatientAppointment)
+                .WithMany(m => m.PatientAppointments)
+                .HasForeignKey(x => x.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
+            //.OnDelete(DeleteBehavior.ClientCascade);
+            // modelBuilder.Entity<IdentityUserLogin<Guid>>()
+            //  .HasNoKey();
+            base.OnModelCreating(modelBuilder);
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+            //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            //modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+        }
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

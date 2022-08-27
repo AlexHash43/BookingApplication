@@ -9,6 +9,8 @@ namespace BookingApplication
         public MappingProfile()
         {
             CreateMap<Procedure, ProcedureDto>();
+            CreateMap<ProcedureCreationDto, Procedure>();
+            CreateMap<Appointment, AppointmentDto>();   
         }
     }
 }

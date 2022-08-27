@@ -47,7 +47,7 @@ namespace BookingApplication.Controllers
                 return StatusCode(500, $"Internal Sertver Error: {ex.Message}");
             }
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetProcedureById(Guid id)
         {
             try
@@ -56,7 +56,7 @@ namespace BookingApplication.Controllers
                 if (procedure != null)
                 {
                     _logger.LogInfo($"Returned procedure by Id {id} from Database");
-                    var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedure);
+                    var procedureResult = _mapper.Map<ProcedureDto>(procedure);
                     return Ok(procedureResult);
                 }
                 else
@@ -72,17 +72,56 @@ namespace BookingApplication.Controllers
                 return StatusCode(500, $"Internal Server Error:{ex.Message}");
             }
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateProcedure(Procedure procedure)
+        [HttpGet("{procedureName}")]
+        public async Task<IActionResult> GetProcedureByName(string procedureName)
         {
             try
             {
-                _repository.Procedure.Create(procedure);
-                var result = await _repository.SaveAsync();
-                if (result != 0)
+                var procedure = await _repository.Procedure.GetProcedureByNameAsync(procedureName);
+                if (procedure != null)
                 {
-                    var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedure);
+                    _logger.LogInfo($"Returned procedure by Name {procedureName} from Database");
+                    var procedureResult = _mapper.Map<ProcedureDto>(procedure);
                     return Ok(procedureResult);
+                }
+                else
+                {
+                    _logger.LogInfo($"No procedure with Name: {procedureName} was found in the Database");
+                    return BadRequest();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"GetProcedureById Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateProcedure([FromBody]ProcedureCreationDto procedure)
+        {
+            try
+            {
+                if(procedure == null)
+                {
+                    _logger.LogError("Procedure object sent from the client is null");
+                    return BadRequest("Procedure object is null");
+                }
+                if(!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid procedure object sent from the client");
+                    return BadRequest("Invalid model object");
+                }
+                var procedureEntity = _mapper.Map<Procedure>(procedure);
+                //procedureEntity.Id = Guid.NewGuid();
+                _repository.Procedure.CreateProcedure(procedureEntity);
+
+                   var result =  await _repository.SaveAsync();
+                 if (result != 0)
+                {
+                    var createdProcedure = _mapper.Map<ProcedureDto>(procedureEntity);
+                    //return CreatedAtRoute("ProcedureCreated", procedure);
+                    return Ok($"Procedure created: {procedure.ProcedureName}");
                 }
                 else
                 {
