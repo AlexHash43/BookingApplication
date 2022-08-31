@@ -161,7 +161,7 @@ namespace BookingApplication.Controllers
                 var result = await _repository.SaveAsync();
                 if (result != 0)
                 {
-                    var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedureEntity);
+                    var procedureResult = _mapper.Map<ProcedureDto>(procedureEntity);
                     return Ok(procedureResult);
                 }
                 else
@@ -198,8 +198,8 @@ namespace BookingApplication.Controllers
                 var result = await _repository.SaveAsync();
                 if (result != 0)
                 {
-                    var procedureResult = _mapper.Map<IEnumerable<ProcedureDto>>(procedureEntity);
-                    return Ok();
+                    
+                    return Ok($"Procedure: '{procedureEntity.ProcedureName}' successfully deleted from the database");
                 }
                 else
                 {
