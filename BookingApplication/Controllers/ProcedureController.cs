@@ -44,7 +44,7 @@ namespace BookingApplication.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"GetAllProcedures Failed: {ex.Message}");
-                return StatusCode(500, $"Internal Sertver Error: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
         [HttpGet("{id:Guid}")]
@@ -114,7 +114,7 @@ namespace BookingApplication.Controllers
                 }
                 var procedureEntity = _mapper.Map<Procedure>(procedure);
                 //procedureEntity.Id = Guid.NewGuid();
-                _repository.Procedure.CreateProcedure(procedureEntity);
+                _repository.Procedure.Create(procedureEntity);
 
                    var result =  await _repository.SaveAsync();
                  if (result != 0)

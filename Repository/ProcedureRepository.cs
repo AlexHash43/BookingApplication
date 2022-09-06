@@ -37,10 +37,10 @@ namespace Repository
         //    Update(procedure);
         //    //return  await GetByCondition(pr => pr.Id == procedure.Id).FirstOrDefaultAsync();
         //}
-        public void CreateProcedure(Procedure procedure)
-        {
-            Create(procedure);
-        }
+        //public void CreateProcedure(Procedure procedure)
+        //{
+        //    Create(procedure);
+        //}
         //public void DeleteProcedureAsync(Procedure procedure)
         //{
         //    Delete(procedure);

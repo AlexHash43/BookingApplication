@@ -9,6 +9,12 @@ namespace Contracts
 {
     public interface IAppointmentRepository:IRepositoryBase<Appointment>
     {
-        IEnumerable<Appointment> GetAllAppointments();
+        Task<IEnumerable<Appointment>> GetAllAppointmentsAsync(DateTime start, DateTime end, Guid doctorId);
+        Task<Appointment> GetAppointmentByIdAsync(Guid appId);
+        Task<IEnumerable<Appointment>> GetDoctorAppointments(Guid doctorId);
+        Task<IEnumerable<Appointment>> GetPatientAppointments(Guid patientId);
+        //Task<Procedure> UpdateProcedureAsync(Procedure procedure);
+        //Task DeleteProcedureAsync(Procedure procedure);
+        //void CreateAppointment(Appointment appointment);
     }
 }

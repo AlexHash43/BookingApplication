@@ -15,7 +15,7 @@ namespace Contracts
         Task<Procedure> GetProcedureByNameAsync(string name);
         //Task<Procedure> UpdateProcedureAsync(Procedure procedure);
         //Task DeleteProcedureAsync(Procedure procedure);
-        void CreateProcedure(Procedure procedure);
+        //void CreateProcedure(Procedure procedure);
 
     }
 }

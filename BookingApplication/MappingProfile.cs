@@ -10,9 +10,10 @@ namespace BookingApplication
         {
             CreateMap<Procedure, ProcedureDto>();
             CreateMap<ProcedureCreationDto, Procedure>();
+            CreateMap<ProcedureForUpdateDto, Procedure>();
             CreateMap<Appointment, AppointmentDto>();
             CreateMap<AppointmentCreationDto, Appointment>();
-            CreateMap<ProcedureForUpdateDto, Procedure>();
+            CreateMap<AppointmentForUpdateDto, Appointment>();
         }
     }
 }
