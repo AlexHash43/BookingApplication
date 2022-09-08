@@ -46,9 +46,13 @@ namespace BookingApplication.Controllers
             }
         }
         [HttpGet("free")]
-        public async Task<IActionResult> GetAppointments([FromQuery] DateTime start, [FromQuery] DateTime end, [FromQuery] string patient)
+        public async Task<IActionResult> GetPatientAppointments([FromQuery] DateTime start, [FromQuery] DateTime end, [FromQuery] Guid patient)
         {
-            return await _repository.Appointment.Where(e => (e.Status == AppointmentStatus.Open || (e.Status != "free" && e.PatientId == patient)) && !((e.End <= start) || (e.Start >= end))).Include(e => e.Doctor).ToListAsync();
+            var patientAppointments = await _repository.Appointment.GetPatientAppointments(patient);
+                return Ok(patientAppointments);
+
         }
+
+
     }
 }

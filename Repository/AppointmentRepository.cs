@@ -1,13 +1,18 @@
-﻿using Contracts;
+﻿
+using Contracts;
 using Entities;
 using Entities.DataTransferObjects;
+using Entities.DataTransferObjects.AppointmentDtos;
 using Entities.Models;
+using Repository.Service;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace Repository
 {
@@ -30,11 +35,10 @@ namespace Repository
                 .Include(e => e.DoctorAppointment.FullName).OrderBy(ap => ap.AppointmentStart).ToListAsync();
             }
         }
-        public async Task<Appointment> CreateAppointmentsAsync(AppointmentCreationDto appointmentForCreation)
+        public async Task<IEnumerable<Appointment>> ExistingAppointment(AppointmentSlotRange appointmentSlotRange)
         {
-            var existing = await GetByCondition(ap => !((ap.AppointmentEnd <= appointmentForCreation.AppointmentStart) || (ap.AppointmentStart >= appointmentForCreation.AppointmentEnd))).ToListAsync();
-            var slots = TimeLine.GenerateSlots(appointmentForCreation.AppointmentStart, appointmentForCreation.AppointmentEnd, appointmentForCreation.Weekends);
-
+            var existingAppointment = await GetByCondition(ap => !((ap.AppointmentEnd <= appointmentSlotRange.Start) || (ap.AppointmentStart >= appointmentSlotRange.End))).ToListAsync();
+            return existingAppointment;
         }
 
         public async Task<Appointment> GetAppointmentByIdAsync(Guid appId)
@@ -50,6 +54,7 @@ namespace Repository
         public async Task<IEnumerable<Appointment>> GetPatientAppointments(Guid patientId)
         {
             return await GetByCondition(ap => ap.PatientId == patientId).OrderBy(ap => ap.AppointmentStart).ToListAsync();
+            //(e => (e.Status != AppointmentStatus.Open && e.PatientId == patient)) && !((e.End <= start) || (e.Start >= end))).Include(e => e.Doctor).ToListAsync();
         }
 
 
