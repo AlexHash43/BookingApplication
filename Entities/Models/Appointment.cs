@@ -15,22 +15,19 @@ namespace Entities.Models
         [Column("AppointmentId")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        [Required(ErrorMessage = "Appointment start time is required")]
-        public DateTime AppointmentStart { get; set; }
-        public DateTime AppointmentEnd { get; set; }
+        public Guid DoctorScheduleId { get; set; }
+
         [ForeignKey(nameof(AppointmentProcedure))]
         public Guid ProcedureId { get; set; }
-
-        [ForeignKey(nameof(DoctorAppointment))]
-        public Guid DoctorId { get; set; }
         
         [ForeignKey(nameof(PatientAppointment))]
         public Guid PatientId { get; set; }
         public DateTime CreatedOn { get; set; }
         public AppointmentStatus Status { get; set; }
+        public string? Description { get; set; }
         public virtual Procedure? AppointmentProcedure { get; set; }
-        public virtual User? DoctorAppointment { get; set; }
         public virtual User? PatientAppointment { get; set; }
+        public virtual DoctorSchedule? DoctorSchedule { get; set; } 
 
     }
 }

@@ -4,7 +4,6 @@ using Entities;
 using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.AppointmentDtos;
 using Entities.Models;
-using Repository.Service;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;

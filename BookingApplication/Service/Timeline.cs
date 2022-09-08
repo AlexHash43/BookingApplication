@@ -1,10 +1,9 @@
 ﻿using Entities.Models;
 using Entities.Models.Enums;
 
-namespace Repository.Service
+namespace BookingApplication.Service
 {
-    public class TimeLine
-
+    public class Timeline
     {
         public static int SlotDurationMinutes = 60;
 
@@ -14,10 +13,10 @@ namespace Repository.Service
         public static int AfternoonShiftStarts = 14;
         public static int AfternoonShiftEnds = 18;
 
-        public static List<Appointment> GenerateSlots(DateTime start, DateTime end, string scale)
+        public static List<Appointment> GenerateSlots(DateTime start, DateTime end, bool weekends)
         {
             var slots = new List<Appointment>();
-            var timeline = GenerateTimeline(start, end, scale);
+            var timeline = GenerateTimeline(start, end, weekends);
 
             foreach (var slot in timeline)
             {
@@ -38,7 +37,7 @@ namespace Repository.Service
             return slots;
         }
 
-        public static List<TimeCell> GenerateTimeline(DateTime start, DateTime end, string scale)
+        public static List<TimeCell> GenerateTimeline(DateTime start, DateTime end, bool weekends)
         {
             var result = new List<TimeCell>();
 
@@ -52,16 +51,16 @@ namespace Repository.Service
             {
                 days += 1;
             }
-
-            if (scale == "shifts")
-            {
-                incrementMorning = MorningShiftEnds - MorningShiftStarts;
-                incrementAfternoon = AfternoonShiftEnds - AfternoonShiftStarts;
-            }
-
             for (var i = 0; i < days; i++)
             {
                 var day = start.Date.AddDays(i);
+                if (!weekends)
+                {
+                    if (day.DayOfWeek == DayOfWeek.Saturday || day.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        continue;
+                    }
+                }
                 for (var x = MorningShiftStarts; x < MorningShiftEnds; x += incrementMorning)
                 {
                     var cell = new TimeCell();
@@ -79,6 +78,8 @@ namespace Repository.Service
                     result.Add(cell);
                 }
             }
+
+
             return result;
         }
 
