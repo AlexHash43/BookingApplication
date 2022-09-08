@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities;
+using Entities.DataTransferObjects;
 using Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,12 @@ namespace Repository
                 .Include(e => e.DoctorAppointment.FullName).OrderBy(ap => ap.AppointmentStart).ToListAsync();
             }
         }
+        public async Task<Appointment> CreateAppointmentsAsync(AppointmentCreationDto appointmentForCreation)
+        {
+            var existing = await GetByCondition(ap => !((ap.AppointmentEnd <= appointmentForCreation.AppointmentStart) || (ap.AppointmentStart >= appointmentForCreation.AppointmentEnd))).ToListAsync();
+            var slots = TimeLine.GenerateSlots(appointmentForCreation.AppointmentStart, appointmentForCreation.AppointmentEnd, appointmentForCreation.Weekends);
+
+        }
 
         public async Task<Appointment> GetAppointmentByIdAsync(Guid appId)
         {
@@ -44,5 +51,7 @@ namespace Repository
         {
             return await GetByCondition(ap => ap.PatientId == patientId).OrderBy(ap => ap.AppointmentStart).ToListAsync();
         }
+
+
     }
 }
