@@ -45,13 +45,19 @@ namespace BookingApplication.Controllers
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
-        [HttpGet("free")]
-        public async Task<IActionResult> GetPatientAppointments([FromQuery] DateTime start, [FromQuery] DateTime end, [FromQuery] Guid patient)
+        [HttpGet("patient")]
+        public async Task<IActionResult> GetPatientAppointments( Guid patient)
         {
             var patientAppointments = await _repository.Appointment.GetPatientAppointments(patient);
                 return Ok(patientAppointments);
-
         }
+        [HttpGet("doctor")]
+        public async Task<IActionResult> GetDoctorAppointments(Guid doctor)
+        {
+            var doctorAppointments = await _repository.Appointment.GetDoctorAppointments(doctor);
+            return Ok(doctorAppointments);
+        }
+
 
 
     }
