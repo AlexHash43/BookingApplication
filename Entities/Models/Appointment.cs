@@ -15,6 +15,7 @@ namespace Entities.Models
         [Column("AppointmentId")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        [ForeignKey(nameof(DoctorSchedule))]
         public Guid DoctorScheduleId { get; set; }
 
         [ForeignKey(nameof(AppointmentProcedure))]

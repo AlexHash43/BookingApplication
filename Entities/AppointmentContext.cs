@@ -10,20 +10,21 @@ using System.Threading.Tasks;
 
 namespace Entities
 {
-    public  class AppointmentContext: IdentityDbContext<User, IdentityRole<Guid>, Guid>
+    public class AppointmentContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public AppointmentContext(DbContextOptions<AppointmentContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<DoctorSchedule> DoctorSchedule { get; set;}
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Procedure> Procedure { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
-            modelBuilder.Entity<Appointment>()
-                .HasOne(e => e.DoctorAppointment)
-                .WithMany(m => m.DoctorAppointments)
-                .HasForeignKey(x => x.DoctorId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Appointment>()
+            //    .HasOne(e => e.DoctorAppointment)
+            //    .WithMany(m => m.DoctorAppointments)
+            //    .HasForeignKey(x => x.DoctorId)
+            //    .OnDelete(DeleteBehavior.Restrict);
             //.OnDelete(DeleteBehavior.ClientCascade); 
 
             modelBuilder.Entity<Appointment>()

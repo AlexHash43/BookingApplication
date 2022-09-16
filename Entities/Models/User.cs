@@ -21,7 +21,7 @@ namespace Entities.Models
         [StringLength(100), Display(Name = "Address")]
         public string? Address { get; set; }
         public DateTime CreatedOn { get; set; }
-        [InverseProperty(nameof(Appointment.DoctorAppointment))]
+        [InverseProperty(nameof(DoctorSchedule.DoctorAppointment))]
         public virtual ICollection<Appointment>? DoctorAppointments { get; set; }
         [InverseProperty(nameof(Appointment.PatientAppointment))]
         public virtual ICollection<Appointment>? PatientAppointments { get; set; }

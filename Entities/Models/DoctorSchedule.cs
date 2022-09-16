@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Entities.Models.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Entities.Models
 {
@@ -11,10 +7,12 @@ namespace Entities.Models
     {
         public Guid Id { get; set; }
         //[Required(ErrorMessage = "Appointment start time is required")]
-        public DateTime AppointmentStart { get; set; }
-        public DateTime AppointmentEnd { get; set; }
-
+        public DateTime ConsultationStart { get; set; }
+        public DateTime ConsultationEnd { get; set; }
         [ForeignKey(nameof(DoctorAppointment))]
         public Guid DoctorId { get; set; }
+        public DoctorScheduleStatus ScheduleStatus { get; set; }
+        public virtual User? DoctorAppointment { get; set; }
+
     }
 }

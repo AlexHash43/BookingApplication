@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Entities.Models.Enums
 {
-    public enum AppointmentStatus
+    public enum DoctorScheduleStatus
     {
-        Open = 1,
-        Scheduled = 2,
-        Completed = 3,
-        Cancelled = 4
-
+        Inactive = 0,
+        Active = 1        
     }
 }
