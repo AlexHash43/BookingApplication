@@ -8,6 +8,8 @@ using Repository;
 using NLog;
 using Microsoft.AspNetCore.HttpOverrides;
 using BookingApplication.Extensions;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
@@ -23,6 +25,8 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryWrapper();
 builder.Services.ConfigureHttpContextAccessor();
 builder.Services.ConfigureAutoMapper();
+builder.Services.ConfigureAuthentication(builder.Configuration);
+
 
 
 builder.Services.AddDbContext<AppointmentContext>(options =>
@@ -37,32 +41,6 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>()
             .AddDefaultTokenProviders();
 builder.Services.AddControllers();
 
-//builder.Services.AddAuthentication(x =>
-//{
-//    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//}).AddCookie("Identity.Application")
-//.AddJwtBearer(x =>
-//{
-//    x.RequireHttpsMetadata = false;
-//    x.SaveToken = true;
-//    x.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuerSigningKey = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(Configuration.GetSection("Jwt:PrivateKey").Value)),
-//        ValidateIssuer = false,
-//        ValidateAudience = false
-//    };
-
-//    x.Events = new JwtBearerEvents
-//    {
-//        OnMessageReceived = context =>
-//        {
-//            context.Token = context.Request.Cookies["jwt"];
-//            return Task.CompletedTask;
-//        }
-//    };
-//});
 // In production, the React files will be served from this directory
 //builder.Services.AddSpaStaticFiles(configuration =>
 //{
@@ -76,7 +54,18 @@ builder.Services.AddControllers();
 //builder.Services.AddScoped<IUserService, UserService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 
 var app = builder.Build();
 
