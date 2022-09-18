@@ -13,9 +13,9 @@ namespace BookingApplication.Service
         public static int AfternoonShiftStarts = 14;
         public static int AfternoonShiftEnds = 18;
 
-        public static List<Appointment> GenerateSlots(DateTime start, DateTime end, bool weekends)
+        public static List<DoctorSchedule> GenerateSlots(DateTime start, DateTime end, bool weekends)
         {
-            var slots = new List<Appointment>();
+            var slots = new List<DoctorSchedule>();
             var timeline = GenerateTimeline(start, end, weekends);
 
             foreach (var slot in timeline)
@@ -25,10 +25,10 @@ namespace BookingApplication.Service
                     for (var slotStart = slot.Start; slotStart < slot.End; slotStart.AddMinutes(SlotDurationMinutes))
                     {
                         var slotEnd = slotStart.AddMinutes(SlotDurationMinutes);
-                        var createdSlot = new Appointment();
-                        createdSlot.AppointmentStart = slotStart;
-                        createdSlot.AppointmentEnd = slotEnd;
-                        createdSlot.Status = AppointmentStatus.Open;
+                        var createdSlot = new DoctorSchedule();
+                        createdSlot.ConsultationStart = slotStart;
+                        createdSlot.ConsultationEnd = slotEnd;
+                        createdSlot.ScheduleStatus = DoctorScheduleStatus.Active;
 
                         slots.Add(createdSlot);
                     }

@@ -23,8 +23,8 @@ namespace Repository
 
         public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync(DateTime start, DateTime end)
         {
-                return await GetByCondition(ap => !((ap.AppointmentStart >= end) || (ap.AppointmentEnd <= start)))
-                .Include(e=> e.DoctorAppointment.FullName).Include(e => e.PatientAppointment.FullName).OrderBy(ap => ap.AppointmentStart).ToListAsync();
+                return await GetByCondition(ap => !((ap.AppointmentTime <= end) || (ap.AppointmentTime >= start)))
+                .Include(e=> e.DoctorSchedule.DoctorAppointment.FullName).Include(e => e.PatientAppointment.FullName).OrderBy(ap => ap.AppointmentTime).ToListAsync();
 
         }
         public async Task<Appointment> GetAppointmentByIdAsync(Guid appId)
@@ -33,19 +33,19 @@ namespace Repository
         }
         public async Task<IEnumerable<Appointment>> ExistingAppointment(AppointmentSlotRange appointmentSlotRange)
         {
-            var existingAppointment = await GetByCondition(ap => !((ap.AppointmentEnd <= appointmentSlotRange.Start) || (ap.AppointmentStart >= appointmentSlotRange.End))).ToListAsync();
+            var existingAppointment = await GetByCondition(ap => !((ap.AppointmentTime >= appointmentSlotRange.Start) || (ap.AppointmentTime <= appointmentSlotRange.End))).ToListAsync();
             return existingAppointment;
         }
 
         public async Task<IEnumerable<Appointment>> GetDoctorAppointments(DateTime start, DateTime end, Guid doctorId)
         {
-            return await GetByCondition(ap => !((ap.AppointmentStart >= end) || (ap.AppointmentEnd <= start)) && ap.DoctorId == doctorId && !((ap.AppointmentStart >= end) || (ap.AppointmentEnd <= start)))
-            .Include(e => e.DoctorAppointment.FullName).OrderBy(ap => ap.AppointmentStart).ToListAsync();
+            return await GetByCondition(ap => !((ap.AppointmentTime <= end) || (ap.AppointmentTime >= start)) && ap.DoctorSchedule.DoctorId == doctorId )
+            .Include(e => e.DoctorSchedule.DoctorAppointment.FullName).OrderBy(ap => ap.AppointmentTime).ToListAsync();
         }
 
         public async Task<IEnumerable<Appointment>> GetPatientAppointments(DateTime start, DateTime end, Guid patientId)
         {
-            return await GetByCondition(ap => !((ap.AppointmentStart >= end) || (ap.AppointmentEnd <= start)) && ap.PatientId == patientId && ap.Status != AppointmentStatus.Open).Include(e => e.DoctorAppointment.FullName).OrderBy(ap => ap.AppointmentStart).ToListAsync();
+            return await GetByCondition(ap => !((ap.AppointmentTime <= end) || (ap.AppointmentTime >= start)) && ap.PatientId == patientId && ap.Status != AppointmentStatus.Open).Include(e => e.DoctorSchedule.DoctorAppointment.FullName).OrderBy(ap => ap.AppointmentTime).ToListAsync();
             //(e => (e.Status != AppointmentStatus.Open && e.PatientId == patient)) && !((e.End <= start) || (e.Start >= end))).Include(e => e.Doctor).ToListAsync();
         }
 

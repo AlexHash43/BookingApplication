@@ -24,6 +24,7 @@ namespace Entities.Models
         [ForeignKey(nameof(PatientAppointment))]
         public Guid PatientId { get; set; }
         public DateTime CreatedOn { get; set; }
+        public DateTime AppointmentTime { get; set; } 
         public AppointmentStatus Status { get; set; }
         public string? Description { get; set; }
         public virtual Procedure? AppointmentProcedure { get; set; }

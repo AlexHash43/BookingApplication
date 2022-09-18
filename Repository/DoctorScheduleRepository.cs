@@ -32,7 +32,7 @@ namespace Repository
         }
         public async Task<DoctorSchedule> GetScheduleByDoctorAsync(GetScheduleByDoctorIdDto getDoctorSchedule)
         {
-            return await GetByCondition(ds => ds.DoctorAppointment.FullName.ToLower() == name.ToLower()).FirstOrDefaultAsync();
+            return await GetByCondition(ds => ds.DoctorAppointment.Id == getDoctorSchedule.DoctorId).FirstOrDefaultAsync();
         }
 
     }
