@@ -19,7 +19,7 @@ namespace BookingApplication.Extensions
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddCookie("Identity.Application")
-            .AddJwtBearer(x =>
+                    .AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;

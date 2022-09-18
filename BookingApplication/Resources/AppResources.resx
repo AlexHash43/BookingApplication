@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FirstNameMinLength" xml:space="preserve">
+    <value>Prenumele nu poate fi mai scurt de 3 caractere sau mai lung de 60 de caractere.</value>
+  </data>
+  <data name="LastNameMinLength" xml:space="preserve">
+    <value>Numele nu poate fi mai scurt de 3 caractere sau mai lung de 60 de caractere.</value>
+  </data>
+  <data name="NoExecutors" xml:space="preserve">
+    <value>Nu există utilizatori cu rol de executor.</value>
+  </data>
+  <data name="NoTaskId" xml:space="preserve">
+    <value>Această sarcină nu există.</value>
+  </data>
+  <data name="NoTasks" xml:space="preserve">
+    <value>Nu s-a putut găsi nici-o sarcină.</value>
+  </data>
+  <data name="NullRole" xml:space="preserve">
+    <value>Rolul nu poate fi nul.</value>
+  </data>
+  <data name="NullTask" xml:space="preserve">
+    <value>Sarcina nu poate fi nulă.</value>
+  </data>
+  <data name="NullUser" xml:space="preserve">
+    <value>Utilizatorul nu poate fi nul.</value>
+  </data>
+  <data name="RoleAlreadyExists" xml:space="preserve">
+    <value>Rolul dat există deja.</value>
+  </data>
+  <data name="RoleCreated" xml:space="preserve">
+    <value>Rolul a fost creat.</value>
+  </data>
+  <data name="RoleCreationImpossible" xml:space="preserve">
+    <value>Crearea rolului este imposibilă.</value>
+  </data>
+  <data name="RoleDeleted" xml:space="preserve">
+    <value>Rolul dat a fost șters.</value>
+  </data>
+  <data name="RoleDeletionImpossible" xml:space="preserve">
+    <value>Rolul dat nu a putut fi șters.</value>
+  </data>
+  <data name="RoleDeletionNoRolesLeft" xml:space="preserve">
+    <value>Ați eliminat toate rolurile.</value>
+  </data>
+  <data name="RoleDoesNotExist" xml:space="preserve">
+    <value>Rolul dat nu există.</value>
+  </data>
+  <data name="RolesDoNotExist" xml:space="preserve">
+    <value>Nu există roluri pentru utilizatori.</value>
+  </data>
+  <data name="RoleUpdated" xml:space="preserve">
+    <value>Rolul a fost modificat.</value>
+  </data>
+  <data name="RoleUpdateImpossible" xml:space="preserve">
+    <value>Modificarea rolului este imposibilă.</value>
+  </data>
+  <data name="TaskAlreadyExists" xml:space="preserve">
+    <value>O sarcină cu același subiect există deja.</value>
+  </data>
+  <data name="TaskCreated" xml:space="preserve">
+    <value>Sarcina a fost creată cu succes.</value>
+  </data>
+  <data name="TaskCreationImpossibleAdd" xml:space="preserve">
+    <value>Nu s-a putut adăuga sarcina dată.</value>
+  </data>
+  <data name="TaskCreationNotSaved" xml:space="preserve">
+    <value>Nu s-a putut salva sarcina dată.</value>
+  </data>
+  <data name="TaskDeleted" xml:space="preserve">
+    <value>Sarcină ștersă cu succes.</value>
+  </data>
+  <data name="TaskDoesNotExist" xml:space="preserve">
+    <value>Această sarcină nu există.</value>
+  </data>
+  <data name="TaskNotDelete" xml:space="preserve">
+    <value>Nu s-a putut șterge sarcina.</value>
+  </data>
+  <data name="TaskNoUpdate" xml:space="preserve">
+    <value>Sarcina nu a putut fi modificată. Încercați din nou.</value>
+  </data>
+  <data name="TaskUpdated" xml:space="preserve">
+    <value>Sarcina a fost modificată.</value>
+  </data>
+  <data name="UserAlreadyExists" xml:space="preserve">
+    <value>Un utilizator cu acest email ales există deja.</value>
+  </data>
+  <data name="UserAuthenticationImpossible" xml:space="preserve">
+    <value>Nu s-a putut realiza autentificarea.</value>
+  </data>
+  <data name="UserBadCredentials" xml:space="preserve">
+    <value>Date de autentificare greșite.</value>
+  </data>
+  <data name="UserCreated" xml:space="preserve">
+    <value>Utilizator creat cu succes.</value>
+  </data>
+  <data name="UserCreatedNoRole" xml:space="preserve">
+    <value>Utilizatorul a fost creat dar nu i s-au putut acorda rolurile.</value>
+  </data>
+  <data name="UserCreationImpossible" xml:space="preserve">
+    <value>Crearea acestui utilizator este imposibilă.</value>
+  </data>
+  <data name="UserDeleted" xml:space="preserve">
+    <value>Utilizatorul dat a fost eliminat.</value>
+  </data>
+  <data name="UserDeletionImpossible" xml:space="preserve">
+    <value>Utilizatorul dat nu a putut fi șters.</value>
+  </data>
+  <data name="UserDeletionNoUserInDb" xml:space="preserve">
+    <value>Acest utilizator nu există.</value>
+  </data>
+  <data name="UserDeletionNoUsersLeft" xml:space="preserve">
+    <value>Ați eliminat toți utilizatorii.</value>
+  </data>
+  <data name="UserDoesNotExist" xml:space="preserve">
+    <value>Acest utilizator nu există.</value>
+  </data>
+  <data name="UserEdited" xml:space="preserve">
+    <value>Utilizatorul a fost modificat.</value>
+  </data>
+  <data name="UserEditedNoRoles" xml:space="preserve">
+    <value>Utilizatorul a fost modificat dar nu i s-au acordat rolurile. Roluri neatribuite: {0}.</value>
+  </data>
+  <data name="UserEditImpossible" xml:space="preserve">
+    <value>Nu s-a putut actualiza utilizatorul dat.</value>
+  </data>
+  <data name="UserModificationSameData" xml:space="preserve">
+    <value>Nu au fost detectate schimbări în datele utilizatorului.</value>
+  </data>
+  <data name="UserRegistrationImpossible" xml:space="preserve">
+    <value>Înregistrarea utilizatorului imposibilă. Încercați din nou.</value>
+  </data>
+  <data name="UsersCreatedNoRoles" xml:space="preserve">
+    <value>Utilizator creat cu succes, dar nu toate rolurile au fost atribuite. Roluri neatribuite: {0}</value>
+  </data>
+  <data name="UsersDoNotExist" xml:space="preserve">
+    <value>Nu există utilizatori.</value>
+  </data>
+</root>
