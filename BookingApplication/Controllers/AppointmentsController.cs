@@ -21,11 +21,11 @@ namespace BookingApplication.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAppointments(DateTime start, DateTime end, Guid doctorId)
+        public async Task<IActionResult> GetAllAppointments(DateTime start, DateTime end)
         {
             try
             {
-                var appointments = await _repository.Appointment.GetAllAppointmentsAsync(start, end, doctorId);
+                var appointments = await _repository.Appointment.GetAllAppointmentsAsync(start, end);
                 if (appointments.Any())
                 {
                     _logger.LogInfo("Returned all procedures from Database");
@@ -46,15 +46,15 @@ namespace BookingApplication.Controllers
             }
         }
         [HttpGet("patient")]
-        public async Task<IActionResult> GetPatientAppointments( Guid patient)
+        public async Task<IActionResult> GetPatientAppointments(DateTime start, DateTime end, Guid patientId)
         {
-            var patientAppointments = await _repository.Appointment.GetPatientAppointments(patient);
+            var patientAppointments = await _repository.Appointment.GetPatientAppointments(start, end, patientId);
                 return Ok(patientAppointments);
         }
         [HttpGet("doctor")]
-        public async Task<IActionResult> GetDoctorAppointments(Guid doctor)
+        public async Task<IActionResult> GetDoctorAppointments(DateTime start, DateTime end, Guid doctorId)
         {
-            var doctorAppointments = await _repository.Appointment.GetDoctorAppointments(doctor);
+            var doctorAppointments = await _repository.Appointment.GetDoctorAppointments(start, end, doctorId);
             return Ok(doctorAppointments);
         }
 

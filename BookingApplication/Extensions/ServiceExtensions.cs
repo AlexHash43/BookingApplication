@@ -18,7 +18,7 @@ namespace BookingApplication.Extensions
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddCookie("Identity.Application")
+            })//.AddCookie("Identity.Application")
                     .AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
@@ -26,7 +26,7 @@ namespace BookingApplication.Extensions
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(configuration.GetSection("Jwt:PrivateKey").Value)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(configuration.GetSection("JWTSettings:securityKey").Value)),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
