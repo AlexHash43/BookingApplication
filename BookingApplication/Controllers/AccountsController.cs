@@ -1,5 +1,5 @@
 ﻿using Contracts;
-using Entities.DataTransferObjects.UserDtos;
+using Entities.DataTransferObjects.UserDtos.UserAuth;
 using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DataTransferObjects.UserDtos
+namespace Entities.DataTransferObjects.UserDtos.UserAuth
 {
-    public class RefreshTokenDto
+    public class AuthResponseDto
     {
+        public bool IsAuthSuccessful { get; set; }
+        public string ErrorMessage { get; set; }
         public string Token { get; set; }
         public string RefreshToken { get; set; }
     }

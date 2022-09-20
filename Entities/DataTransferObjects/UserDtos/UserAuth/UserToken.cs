@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DataTransferObjects.UserDtos
+namespace Entities.DataTransferObjects.UserDtos.UserAuth
 {
     public class UserToken
     {

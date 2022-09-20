@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using BookingApplication.Resources;
 using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
-
+using Entities.DataTransferObjects.UserDtos.UserToken.UserAuth;
+using Entities.DataTransferObjects.UserDtos.UserAuth;
 
 namespace BookingApplication.Controllers
 {
