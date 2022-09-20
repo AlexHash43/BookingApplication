@@ -125,46 +125,46 @@ namespace BookingApplication.Controllers
             ///     the procedure on client request.
             /// </summary>
             /// <returns>The updated list of users and an Ok message or a bad request if procedure unsuccessful.</returns>
-            [HttpPost("creation")]
-            [ProducesResponseType(StatusCodes.Status200OK)]
-            [ProducesResponseType(StatusCodes.Status400BadRequest)]
-            async public Task<IActionResult> CreateUser(UserForCreationDto userToCreate)
-            {
-                if (userToCreate is null) return BadRequest(AppResources.NullUser);
+            //[HttpPost("creation")]
+            //[ProducesResponseType(StatusCodes.Status200OK)]
+            //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+            //async public Task<IActionResult> CreateUser(UserForCreationDto userToCreate)
+            //{
+            //    if (userToCreate is null) return BadRequest(AppResources.NullUser);
 
-                var user = _userManager.Users.FirstOrDefault(user => user.Email == userToCreate.Email);
+            //    var user = _userManager.Users.FirstOrDefault(user => user.Email == userToCreate.Email);
 
-                if (user is not null) return BadRequest(AppResources.UserAlreadyExists);
+            //    if (user is not null) return BadRequest(AppResources.UserAlreadyExists);
 
-                var hasher = new PasswordHasher<UserForCreationDto>();
-                var hash = hasher.HashPassword(userToCreate, userToCreate.Password);
-                var newUser = new User
-                {
-                    Email = userToCreate.Email,
-                    PasswordHash = hash,
-                    UserName = userToCreate.Email,
-                    FirstName = userToCreate.FirstName,
-                    LastName = userToCreate.LastName,
-                };
-                var result = await _userManager.CreateAsync(newUser);
+            //    var hasher = new PasswordHasher<UserForCreationDto>();
+            //    var hash = hasher.HashPassword(userToCreate, userToCreate.Password);
+            //    var newUser = new User
+            //    {
+            //        Email = userToCreate.Email,
+            //        PasswordHash = hash,
+            //        UserName = userToCreate.Email,
+            //        FirstName = userToCreate.FirstName,
+            //        LastName = userToCreate.LastName,
+            //    };
+            //    var result = await _userManager.CreateAsync(newUser);
 
-                if (!result.Succeeded) return BadRequest(AppResources.UserCreationImpossible);
-                else
-                {
-                    var roleResult = await _userManager.AddToRolesAsync(newUser, userToCreate.Roles);
-                    var userDbList = _userManager.Users.ToList();
-                    var userReturnList = userDbList.Select(async user => new GetUserDto
-                    {
-                        Id = user.Id,
-                        FullName = $"{user.FirstName} {user.LastName}",
-                        UserName = user.UserName,
-                        Email = user.Email,
-                        Roles = await _userManager.GetRolesAsync(user)
-                    });
+            //    if (!result.Succeeded) return BadRequest(AppResources.UserCreationImpossible);
+            //    else
+            //    {
+            //        var roleResult = await _userManager.AddToRolesAsync(newUser, userToCreate.Roles);
+            //        var userDbList = _userManager.Users.ToList();
+            //        var userReturnList = userDbList.Select(async user => new GetUserDto
+            //        {
+            //            Id = user.Id,
+            //            FullName = $"{user.FirstName} {user.LastName}",
+            //            UserName = user.UserName,
+            //            Email = user.Email,
+            //            Roles = await _userManager.GetRolesAsync(user)
+            //        });
 
-                    return Ok(new { Users = userReturnList, Message = AppResources.UserCreated });
-                }
-            }
+            //        return Ok(new { Users = userReturnList, Message = AppResources.UserCreated });
+            //    }
+            //}
 
             /// <summary>
             ///     Modifies an existing user with data from 
@@ -173,7 +173,7 @@ namespace BookingApplication.Controllers
             ///     on user request.
             /// </summary>
             /// <returns>The updated user list and an Ok message or bad request if unsuccessful.</returns>
-            [HttpPost("modification")]
+            [HttpPost("userupdate")]
             [ProducesResponseType(StatusCodes.Status200OK)]
             [ProducesResponseType(StatusCodes.Status400BadRequest)]
             public async Task<IActionResult> ChangeUserAsync(ChangeUserDto userToChange)
