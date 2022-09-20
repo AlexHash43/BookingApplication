@@ -46,7 +46,7 @@ builder.Services.AddControllers();
 //{
 //    configuration.RootPath = "ClientApp/build";
 //});
-//services.AddSingleton<ILoggerManager, LoggerManager>
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 //builder.Services.AddSingleton<IJwtHandlerAuth>(new JwtHandlerAuth(Configuration.GetSection("Jwt:PrivateKey").Value));
