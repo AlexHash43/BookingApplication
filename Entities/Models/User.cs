@@ -24,7 +24,7 @@ namespace Entities.Models
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
         [InverseProperty(nameof(DoctorSchedule.DoctorAppointment))]
-        public virtual ICollection<Appointment>? DoctorAppointments { get; set; }
+        public virtual ICollection<DoctorSchedule>? DoctorAppointments { get; set; }
         [InverseProperty(nameof(Appointment.PatientAppointment))]
         public virtual ICollection<Appointment>? PatientAppointments { get; set; }
     }
