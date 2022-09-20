@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingApplication.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20220827175007_InitialCreate")]
+    [Migration("20220920072821_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,20 +26,21 @@ namespace BookingApplication.Migrations
 
             modelBuilder.Entity("Entities.Models.Appointment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("AppointmentId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("AppointmentStart")
+                    b.Property<DateTime>("AppointmentTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DoctorId")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("DoctorScheduleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PatientId")
@@ -53,13 +54,38 @@ namespace BookingApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorId");
+                    b.HasIndex("DoctorScheduleId");
 
                     b.HasIndex("PatientId");
 
                     b.HasIndex("ProcedureId");
 
                     b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("Entities.Models.DoctorSchedule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ConsultationEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ConsultationStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ScheduleStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorSchedule");
                 });
 
             modelBuilder.Entity("Entities.Models.Procedure", b =>
@@ -139,6 +165,12 @@ namespace BookingApplication.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -296,9 +328,9 @@ namespace BookingApplication.Migrations
 
             modelBuilder.Entity("Entities.Models.Appointment", b =>
                 {
-                    b.HasOne("Entities.Models.User", "DoctorAppointment")
-                        .WithMany("DoctorAppointments")
-                        .HasForeignKey("DoctorId")
+                    b.HasOne("Entities.Models.DoctorSchedule", "DoctorSchedule")
+                        .WithMany()
+                        .HasForeignKey("DoctorScheduleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -316,9 +348,20 @@ namespace BookingApplication.Migrations
 
                     b.Navigation("AppointmentProcedure");
 
-                    b.Navigation("DoctorAppointment");
+                    b.Navigation("DoctorSchedule");
 
                     b.Navigation("PatientAppointment");
+                });
+
+            modelBuilder.Entity("Entities.Models.DoctorSchedule", b =>
+                {
+                    b.HasOne("Entities.Models.User", "DoctorAppointment")
+                        .WithMany("DoctorAppointments")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DoctorAppointment");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

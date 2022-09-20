@@ -33,6 +33,8 @@ namespace BookingApplication.Migrations
                     FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -172,31 +174,52 @@ namespace BookingApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DoctorSchedule",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultationStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ConsultationEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DoctorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ScheduleStatus = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorSchedule", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DoctorSchedule_AspNetUsers_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
                 {
-                    AppointmentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AppointmentStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AppointmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DoctorScheduleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProcedureId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DoctorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    AppointmentTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Appointments", x => x.AppointmentId);
                     table.ForeignKey(
-                        name: "FK_Appointments_AspNetUsers_DoctorId",
-                        column: x => x.DoctorId,
+                        name: "FK_Appointments_AspNetUsers_PatientId",
+                        column: x => x.PatientId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Appointments_AspNetUsers_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_Appointments_DoctorSchedule_DoctorScheduleId",
+                        column: x => x.DoctorScheduleId,
+                        principalTable: "DoctorSchedule",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -208,9 +231,9 @@ namespace BookingApplication.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_DoctorId",
+                name: "IX_Appointments_DoctorScheduleId",
                 table: "Appointments",
-                column: "DoctorId");
+                column: "DoctorScheduleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_PatientId",
@@ -260,6 +283,11 @@ namespace BookingApplication.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorSchedule_DoctorId",
+                table: "DoctorSchedule",
+                column: "DoctorId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -281,6 +309,9 @@ namespace BookingApplication.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "DoctorSchedule");
 
             migrationBuilder.DropTable(
                 name: "Procedure");
