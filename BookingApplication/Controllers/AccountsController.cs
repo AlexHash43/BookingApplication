@@ -40,7 +40,7 @@ namespace BookingApplication.Controllers
 				_logger.LogError(errors.ToString());
 			}
 
-			await _userManager.AddToRoleAsync(user, "Admin");
+			await _userManager.AddToRoleAsync(user, "Patient");
 
 			return StatusCode(201);
 		}

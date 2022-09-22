@@ -35,9 +35,5 @@ namespace Entities.DataTransferObjects.UserDtos
         [RegularExpression(@"^[^\s.!?\\\/]+$", ErrorMessage = "User Name should not include whitespace or any special character")]
         public string UserName { get; set; }
 
-        /// <summary>
-        ///     User new roles getter/setter.
-        /// </summary>
-        public IEnumerable<string> Roles { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Entity;
 
 namespace BookingApplication.Controllers
 {
@@ -19,13 +20,15 @@ namespace BookingApplication.Controllers
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper, UserManager<User> userManager)
+        public UserController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _logger = logger;
             _repository = repository;
             _mapper = mapper;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
     
 
@@ -38,7 +41,7 @@ namespace BookingApplication.Controllers
             [ProducesResponseType(StatusCodes.Status400BadRequest)]
             public async Task<IActionResult> GetUsers()
             {
-                var userDbList = _userManager.Users.ToList();
+                var userDbList = await _userManager.Users.ToListAsync();
 
                 if (userDbList is null) return BadRequest(AppResources.UsersDoNotExist);
 
@@ -61,9 +64,9 @@ namespace BookingApplication.Controllers
             [HttpGet("{id}")]
             [ProducesResponseType(StatusCodes.Status200OK)]
             [ProducesResponseType(StatusCodes.Status400BadRequest)]
-            public async Task<IActionResult> GetDetailedUsers(Guid id)
+            public async Task<IActionResult> GetDetailedUser(Guid id)
             {
-                var userDb = _userManager.Users.FirstOrDefault(user => user.Id == id);
+                var userDb = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == id);
 
             if (userDb is null) return BadRequest(AppResources.UsersDoNotExist);
 
@@ -95,7 +98,7 @@ namespace BookingApplication.Controllers
             {
                 if (getUser is null) return BadRequest(AppResources.NullUser);
 
-                var user = _userManager.Users.FirstOrDefault(user => user.Id == getUser.Id);
+                var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == getUser.Id);
 
                 if (user is null) return BadRequest(AppResources.UserDeletionNoUserInDb);
 
@@ -192,21 +195,15 @@ namespace BookingApplication.Controllers
                     && user.UserName == userToChange.UserName
                     && user.FirstName == userToChange.FirstName
                     && user.LastName == userToChange.LastName
-                    && userRoles == userToChange.Roles
                 ) return BadRequest(AppResources.UserModificationSameData);
 
-                if (userToChange.Email is not null) user.Email = userToChange.Email;
-                if (userToChange.UserName is not null) user.UserName = userToChange.UserName;
-                if (userToChange.FirstName is not null) user.FirstName = userToChange.FirstName;
-                if (userToChange.LastName is not null) user.LastName = userToChange.LastName;
+                user.Email = userToChange.Email is not null? userToChange.Email: user.Email;
+                user.UserName = userToChange.UserName is not null?  userToChange.UserName: user.UserName;
+                user.FirstName = userToChange.FirstName is not null? userToChange.FirstName: user.FirstName;
+                user.LastName = userToChange.LastName is not null? userToChange.LastName: user.LastName;
 
                 var rolesNotAdded = new List<string>();
 
-                if (userToChange.Roles.Any())
-                {
-                    var rolesRemovalResult = await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
-                    var roleResult = await _userManager.AddToRolesAsync(user, userToChange.Roles);
-                }
 
                 var result = await _userManager.UpdateAsync(user);
 

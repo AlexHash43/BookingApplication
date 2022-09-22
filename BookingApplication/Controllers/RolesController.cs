@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApplication.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class RolesController : ControllerBase
@@ -22,7 +23,6 @@ namespace BookingApplication.Controllers
         }
 
         // GET: api/<RolesController>
-        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetRoles()
         {
@@ -38,7 +38,6 @@ namespace BookingApplication.Controllers
         }
 
         // GET api/<RolesController>/5
-        [Authorize(Roles = "Admin")]
         [HttpGet("rolid")]
         public async Task<IActionResult> GetRole(Guid id)
         {
@@ -54,7 +53,6 @@ namespace BookingApplication.Controllers
         }
 
         // POST api/<RolesController>
-        [Authorize(Roles = "Admin")]
         [HttpPost("createrole")]
         public async Task<IActionResult> CreateRoleAsync(string roleName)
         {
@@ -84,7 +82,6 @@ namespace BookingApplication.Controllers
         }
 
         // PUT api/<RolesController>/5
-        [Authorize(Roles = "Admin")]
         [HttpPut]//("{updaterole}")]
         public async Task<IActionResult> EditRoleASync(RoleForReturn role)//, CancellationToken cancellationToken)
         {
@@ -103,7 +100,6 @@ namespace BookingApplication.Controllers
         }
 
         // DELETE api/<RolesController>/5
-        [Authorize(Roles = "Admin")]
         [HttpDelete]//("{id}")]
         public async Task<IActionResult> DeleteRoleAsync(RoleForReturn roleModel)
         {
