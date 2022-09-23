@@ -202,7 +202,6 @@ namespace BookingApplication.Controllers
                 user.FirstName = userToChange.FirstName is not null? userToChange.FirstName: user.FirstName;
                 user.LastName = userToChange.LastName is not null? userToChange.LastName: user.LastName;
 
-                var rolesNotAdded = new List<string>();
 
 
                 var result = await _userManager.UpdateAsync(user);
@@ -220,9 +219,7 @@ namespace BookingApplication.Controllers
                         Roles = await _userManager.GetRolesAsync(user)
                     });
 
-                    if (!rolesNotAdded.Any()) return Ok(new { Users = userReturnList, Message = AppResources.UserEdited });
-
-                    return Ok(new { Users = userReturnList, Message = string.Format(AppResources.UserEditedNoRoles, string.Join(",", rolesNotAdded.ToArray())) });
+                    return Ok(new { Users = userReturnList, Message = "User updated with success" });
                 }
             }
     }

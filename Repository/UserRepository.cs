@@ -63,14 +63,15 @@ namespace Repository
             return await _userManager.UpdateAsync(user);
         }
 
-        public Task<IdentityResult> AddUserRolesAsync(User user, IList<string> rolesList)
+        public async Task<IdentityResult> AddUserRolesAsync(User user, IList<string> rolesList)
         {
-            throw new NotImplementedException();
+            return await _userManager.AddToRolesAsync(user, rolesList);
         }
 
-        public Task<IdentityResult> RemoveUserRoleAsync(User user, IList<string> rolesList)
+        public async Task<IdentityResult> RemoveUserRoleAsync(User user, IList<string> rolesList)
         {
-            throw new NotImplementedException();
+            return await _userManager.RemoveFromRolesAsync(user, rolesList);
+
         }
 
         public async Task<bool> UpdateUserRolesAsync(User user, ChangeUserRolesDto userToChange)
@@ -78,7 +79,7 @@ namespace Repository
             bool result = false;
             if (userToChange.Roles.Any())
             {
-                var rolesRemovalResult = await _userManager.RemoveFromRolesAsync(user, (IEnumerable<string>)GetUserRolesAsync(user));
+                var rolesRemovalResult = await AddUserRolesAsync(user, await GetUserRolesAsync(user));
                 var roleResult = await _userManager.AddToRolesAsync(user, userToChange.Roles);
                 result = rolesRemovalResult.Succeeded && roleResult.Succeeded? true : false;
                 return result;
