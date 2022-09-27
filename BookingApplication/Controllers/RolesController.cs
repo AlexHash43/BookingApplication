@@ -83,7 +83,7 @@ namespace BookingApplication.Controllers
 
         // PUT api/<RolesController>/5
         [HttpPut]//("{updaterole}")]
-        public async Task<IActionResult> EditRoleASync(RoleForReturn role)//, CancellationToken cancellationToken)
+        public async Task<IActionResult> EditRoleASync(RoleForReturn role)
         {
             if (role == null) return NotFound();
             var originalRole = await _roleManager.Roles.Where(a => a.Id == role.Id).FirstOrDefaultAsync();

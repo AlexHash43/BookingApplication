@@ -14,6 +14,7 @@ namespace Repository
         private AppointmentContext _appointmentContext;
         private IAppointmentRepository _appointment;
         private IProcedureRepository _procedure;
+        private IDoctorScheduleRepository _doctorSchedule;
 
         public IAppointmentRepository Appointment
         {
@@ -37,6 +38,18 @@ namespace Repository
                 return _procedure;
             }
         }
+        public IDoctorScheduleRepository DoctorSchedule
+        {
+            get
+            {
+                if (_doctorSchedule == null)
+                {
+                    _doctorSchedule = new DoctorScheduleRepository(_appointmentContext);
+                }
+                return _doctorSchedule;
+            }
+        }
+        
         public RepositoryWrapper(AppointmentContext appointmentContext)//, IAppointmentRepository appointment, IProcedureRepository procedure)
         {
             _appointmentContext = appointmentContext;
