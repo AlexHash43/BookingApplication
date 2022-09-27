@@ -17,7 +17,17 @@ namespace Entities.Models
         [StringLength(50), Display(Name = "Last Name")]
         public string? LastName { get; set; }
         [StringLength(100), Display(Name = "Full Name")]
-        public string? FullName { get; set; }
+        public string? FullName 
+        { get  
+            {
+                string dspFirstName =
+                    string.IsNullOrWhiteSpace(this.FirstName) ? "" : this.FirstName;
+                string dspLastName =
+                    string.IsNullOrWhiteSpace(this.LastName) ? "" : this.LastName;
+
+                return $"{dspFirstName} {dspLastName}";
+            } 
+        }
         [StringLength(100), Display(Name = "Address")]
         public string? Address { get; set; }
         public DateTime CreatedOn { get; set; }

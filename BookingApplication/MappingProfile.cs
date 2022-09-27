@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Entities.Models;
 using Entities.DataTransferObjects;
+using Entities.DataTransferObjects.UserDtos;
 
 namespace BookingApplication
 {
@@ -14,6 +15,8 @@ namespace BookingApplication
             CreateMap<Appointment, AppointmentDto>();
             CreateMap<AppointmentCreationDto, Appointment>();
             CreateMap<AppointmentForUpdateDto, Appointment>();
+            CreateMap<User, GetUserDto>();
+            CreateMap<GetUserDto, User>();
         }
     }
 }

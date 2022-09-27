@@ -8,25 +8,12 @@ namespace Entities.DataTransferObjects.UserDtos
 {
     public class GetUserDto
     {
-        /// <summary>
-        ///    Gets and sets the user UserId.
-        /// </summary>
+
         public Guid Id { get; set; }
-        public string FullName { get; set; }
-
-        /// <summary>
-        ///     Gets and sets the username.
-        /// </summary>
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string UserName { get; set; }
-
-        /// <summary>
-        ///     Gets and sets the email.
-        /// </summary>
         public string Email { get; set; }
-
-        /// <summary>
-        ///     Gets and sets user's role.
-        /// </summary>
-        public IList<string> Roles { get; set; }
+        //public IList<string> Roles { get; set; }
     }
 }

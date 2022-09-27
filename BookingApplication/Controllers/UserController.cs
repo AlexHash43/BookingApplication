@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingApplication.Controllers
 {
-    [Authorize(Policy = "admin")]
+    //[Authorize(Policy = "admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -20,15 +20,17 @@ namespace BookingApplication.Controllers
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public UserController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper, UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager, IUserRepository userRepository)
         {
             _logger = logger;
             _repository = repository;
             _mapper = mapper;
             _userManager = userManager;
             _roleManager = roleManager;
+            _userRepository = userRepository;
         }
     
 
@@ -44,17 +46,9 @@ namespace BookingApplication.Controllers
                 var userDbList = await _userManager.Users.ToListAsync();
 
                 if (userDbList is null) return BadRequest(AppResources.UsersDoNotExist);
+            var userList = _mapper.Map<List<GetUserDto>>(userDbList);
 
-                var userList = userDbList.Select(user => new GetUserDto
-
-                {
-                    Id = user.Id,
-                    FullName = $"{user.FirstName} {user.LastName}",
-                    UserName = user.UserName,
-                    Email = user.Email,
-                });
-
-                return Ok(userList);
+            return Ok(userList);
             }
 
             /// <summary>
@@ -68,10 +62,11 @@ namespace BookingApplication.Controllers
             {
                 var userDb = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == id);
 
-            if (userDb is null) return BadRequest(AppResources.UsersDoNotExist);
+            //if (userDb is null) return BadRequest(AppResources.UsersDoNotExist);
+                if (userDb is null) return NotFound(userDb);
 
-                var roles = await _userManager.GetRolesAsync(userDb);
-
+                //var roles = await _userManager.GetRolesAsync(userDb);
+                
                 return Ok(new GetUserDetailsDto
                 {
                     Id = userDb.Id,
@@ -81,7 +76,7 @@ namespace BookingApplication.Controllers
                     Email = userDb.Email,
                     Address = userDb.Address,
                     PhoneNumber = userDb.PhoneNumber,
-                    Roles = roles
+                    Roles = await _userManager.GetRolesAsync(userDb)
                 });
             }
 
@@ -110,13 +105,7 @@ namespace BookingApplication.Controllers
 
                 if (userDbList is null) return Ok(new UserForRemovalDto { Message = AppResources.UserDeletionNoUsersLeft, User = null });
 
-                var userReturnList = userDbList.Select(async user => new GetUserDto
-                {
-                    FullName = $"{user.FirstName} {user.LastName}",
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    Roles = await _userManager.GetRolesAsync(user)
-                });
+                var userReturnList = _mapper.Map<GetUserDto>(userDbList);
 
                 return Ok(AppResources.UserDeleted);
             }
@@ -197,29 +186,16 @@ namespace BookingApplication.Controllers
                     && user.LastName == userToChange.LastName
                 ) return BadRequest(AppResources.UserModificationSameData);
 
-                user.Email = userToChange.Email is not null? userToChange.Email: user.Email;
-                user.UserName = userToChange.UserName is not null?  userToChange.UserName: user.UserName;
-                user.FirstName = userToChange.FirstName is not null? userToChange.FirstName: user.FirstName;
-                user.LastName = userToChange.LastName is not null? userToChange.LastName: user.LastName;
 
-
-
-                var result = await _userManager.UpdateAsync(user);
+               var result = await _userRepository.UpdateUserAsync(user, userToChange);
 
                 if (!result.Succeeded) return BadRequest(AppResources.UserEditImpossible);
                 else
                 {
                     var userDbList = _userManager.Users.ToList();
-                    var userReturnList = userDbList.Select(async user => new GetUserDto
-                    {
-                        Id = user.Id,
-                        FullName = $"{user.FirstName} {user.LastName}",
-                        UserName = user.UserName,
-                        Email = user.Email,
-                        Roles = await _userManager.GetRolesAsync(user)
-                    });
+                    var userReturnList = _mapper.Map<GetUserDto>(userDbList);
 
-                    return Ok(new { Users = userReturnList, Message = "User updated with success" });
+                return Ok(new { Users = userReturnList, Message = "User updated with success" });
                 }
             }
     }
