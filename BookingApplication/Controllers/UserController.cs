@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApplication.Controllers
 {
+
+    //Implement Logging, try/catch ex()
     //[Authorize(Policy = "admin")]
     [Route("api/[controller]")]
     [ApiController]

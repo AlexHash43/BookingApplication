@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.DataTransferObjects.DoctorScheduleDtos;
+using Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ namespace Contracts
 {
     public interface IDoctorScheduleRepository : IRepositoryBase<DoctorSchedule>
     {
-        Task<IEnumerable<DoctorSchedule>> GetAllSchedulesAsync();
-        Task<DoctorSchedule> GetSchedulesByIdAsync(Guid id);
-        Task<DoctorSchedule> GetSchedulesByDoctorAsync(string name);
+        Task<IEnumerable<DoctorSchedule>> GetAllSchedulesAsync(TimeFrameDto interval);
+        Task<DoctorSchedule> GetScheduleSlotById(Guid slotId);
+        Task<List<DoctorSchedule>> GetScheduleSlotsByDoctorAsync(GetScheduleByDoctorIdDto getDoctorSchedule);
+        Task<List<Guid>> GetDoctorIdsAsync();
     }
 }

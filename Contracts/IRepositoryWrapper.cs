@@ -11,6 +11,7 @@ namespace Contracts
     {
         IAppointmentRepository Appointment { get; }
         IProcedureRepository Procedure { get; }
+        IDoctorScheduleRepository DoctorSchedule { get; }
         Task<int> SaveAsync();
     }
 }

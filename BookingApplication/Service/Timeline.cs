@@ -13,7 +13,7 @@ namespace BookingApplication.Service
         public static int AfternoonShiftStarts = 14;
         public static int AfternoonShiftEnds = 18;
 
-        public static List<DoctorSchedule> GenerateSlots(DateTime start, DateTime end, bool weekends)
+        public static List<DoctorSchedule> GenerateSlots(Guid doctorId, DateTime start, DateTime end, bool weekends)
         {
             var slots = new List<DoctorSchedule>();
             var timeline = GenerateTimeline(start, end, weekends);
@@ -26,6 +26,7 @@ namespace BookingApplication.Service
                     {
                         var slotEnd = slotStart.AddMinutes(SlotDurationMinutes);
                         var createdSlot = new DoctorSchedule();
+                        createdSlot.DoctorId = doctorId;
                         createdSlot.ConsultationStart = slotStart;
                         createdSlot.ConsultationEnd = slotEnd;
                         createdSlot.ScheduleStatus = DoctorScheduleStatus.Active;
