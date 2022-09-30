@@ -2,6 +2,7 @@
 using Entities.Models;
 using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.UserDtos;
+using Entities.DataTransferObjects.DoctorScheduleDtos;
 
 namespace BookingApplication
 {
@@ -17,6 +18,8 @@ namespace BookingApplication
             CreateMap<AppointmentForUpdateDto, Appointment>();
             CreateMap<User, GetUserDto>();
             CreateMap<GetUserDto, User>();
+            CreateMap<SlotUpdateDto, DoctorSchedule>();
+            CreateMap<ScheduleSlotDto, DoctorSchedule>();
         }
     }
 }

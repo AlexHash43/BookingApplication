@@ -19,18 +19,12 @@ namespace BookingApplication.Controllers
         private readonly ILoggerManager _logger;
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<User> _roleManager;
-        private readonly AppointmentContext _context;
 
-        public DoctorScheduleController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper, UserManager<User> userManager, RoleManager<User> roleManager, AppointmentContext context )
+        public DoctorScheduleController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
             _mapper = mapper;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _context = context;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllSchedulesAsync(TimeFrameDto timeFrame)
@@ -69,7 +63,7 @@ namespace BookingApplication.Controllers
             }
             return BadRequest();
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Policy = "admin")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateDoctorSchedule([FromBody] ScheduleSlotRangeDto doctorSchedule)
         {
@@ -101,7 +95,7 @@ namespace BookingApplication.Controllers
                     return BadRequest();
                 slots.ForEach(slot =>
                     {
-                        _context.DoctorSchedule.Add(slot);
+                        _repository.DoctorSchedule.Create(slot);
                     });
                 var result = await _repository.SaveAsync();
                 if (result != 0)
@@ -122,13 +116,93 @@ namespace BookingApplication.Controllers
                 return StatusCode(500, $"Internal Server Error:{ex.Message}");
             }
         }
+        //Update should not be made in case there is an appointment made using DoctorSchedule Id
+        //[Authorize(Policy = "admin_doctor")]
+        [HttpPut]
+        public async Task<ActionResult> UpdateSlot(SlotUpdateDto slotUpdate)
+        {
+            try
+            {
+                if (slotUpdate == null)
+                {
+                    _logger.LogError("SlotUpdate object sent from the client is null");
+                    return BadRequest("SlotUpdate object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid SlotUpdate object sent from the client");
+                    return BadRequest("Invalid model object");
+                }
+                var appointment = _repository.Appointment.GetByCondition(a => a.DoctorScheduleId == slotUpdate.Id);
+                if (appointment != null)
+                {
+                    return BadRequest("There is an appointment set on this slot");
+                }
+                var slot = await _repository.DoctorSchedule.GetScheduleSlotById(slotUpdate.Id);
+                if (slot is null)
+                {
+                    _logger.LogError($"SlotUpdate with id: {slotUpdate.Id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                _mapper.Map(slotUpdate, slot);
+                _repository.DoctorSchedule.Update(slot);
+                var result = await _repository.SaveAsync();
+                if (result != 0)
+                {
+                    var procedureResult = _mapper.Map<ScheduleSlotDto>(slot);
+                    return Ok(procedureResult);
+                }
+                else
+                {
+                    _logger.LogInfo($"Updating Schedule slot {slot.Id} in the Database failed ");
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Update Slot Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProcedure(Guid id)
+        {
+            try
+            {
+                var scheduleSlotEntity = await _repository.DoctorSchedule.GetScheduleSlotById(id);
+                if (scheduleSlotEntity == null)
+                {
+                    _logger.LogError($"Procedure with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                //Check if there's any appointment with this procedure used
 
-        //[Authorize(Roles = "Admin")]
-        //[HttpPut]
-        //public async Task<ActionResult> UpdateSlot (TimeFrameDto range)
-        //{
-        //    return NotImplementedException();
-        //}
+                var appointments = _repository.Appointment.GetByCondition(a => a.DoctorScheduleId == id);
+                if (appointments.Any())
+                {
+                    _logger.LogError($"Cannot delete DoctorSchedule slot with id: {id}. It has related accounts. Delete those accounts first");
+                    return BadRequest("Cannot delete DoctorSchedule slot. It has related appointments. Delete those appointments first");
+                }
+                _repository.DoctorSchedule.Delete(scheduleSlotEntity);
+                var result = await _repository.SaveAsync();
+                if (result != 0)
+                {
+
+                    return Ok($"Schedule slot: start - '{scheduleSlotEntity.ConsultationStart}' end - '{scheduleSlotEntity.ConsultationEnd}', successfully deleted from the database");
+                }
+                else
+                {
+                    _logger.LogInfo($"Deleting DoctorSchedule slot {scheduleSlotEntity.Id} in the Database failed ");
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Delete DoctorSchedule slot Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
+        }
+
 
 
     }

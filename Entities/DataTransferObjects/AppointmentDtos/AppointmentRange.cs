@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Entities.DataTransferObjects.AppointmentDtos
 {
-    public class AppointmentSlotRange
+    public class AppointmentRange
     {
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-        public bool Weekends { get; set; }
+        public Guid Id { get; set; }
     }
 }

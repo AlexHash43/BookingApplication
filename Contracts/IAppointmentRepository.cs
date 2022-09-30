@@ -1,4 +1,6 @@
-﻿using Entities.Models;
+﻿using Entities.DataTransferObjects;
+using Entities.DataTransferObjects.AppointmentDtos;
+using Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +13,9 @@ namespace Contracts
     {
         Task<IEnumerable<Appointment>> GetAllAppointmentsAsync(DateTime start, DateTime end);
         Task<Appointment> GetAppointmentByIdAsync(Guid appId);
-        Task<IEnumerable<Appointment>> GetDoctorAppointments(DateTime start, DateTime end, Guid doctorId);
-        Task<IEnumerable<Appointment>> GetPatientAppointments(DateTime start, DateTime end, Guid patientId);
+        Task<IEnumerable<Appointment>> GetDoctorAppointments(AppointmentRange appointmentRange);
+        Task<IEnumerable<Appointment>> GetPatientAppointments(AppointmentRange appointmentRange);
+        Appointment CreateAppointmentAsync(AppointmentCreationDto appointmentToCreate);
         //Task<Procedure> UpdateProcedureAsync(Procedure procedure);
         //Task DeleteProcedureAsync(Procedure procedure);
         //void CreateAppointment(Appointment appointment);

@@ -17286,3 +17286,29 @@
 2022-09-27 15:11:28.2259 Trace  Scanning Property LineEnding 'Default' NLog.Targets
 2022-09-27 15:11:28.2259 Trace FileTarget(Name=logfile) has 2 layouts
 2022-09-27 15:11:28.2259 Trace FileTarget(Name=logfile): Using appenderFactory: NLog.Internal.FileAppenders.SingleProcessFileAppender+Factory
+2022-09-29 17:52:59.0431 Info Message Template Auto Format enabled
+2022-09-29 17:52:59.3902 Debug ScanAssembly('NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c')
+2022-09-29 17:53:00.7327 Trace  Scanning LiteralLayoutRenderer 'Layout Renderer: ${literal}'
+2022-09-29 17:53:00.7327 Trace  Scanning LevelLayoutRenderer 'Layout Renderer: ${level}'
+2022-09-29 17:53:00.7327 Trace  Scanning LiteralLayoutRenderer 'Layout Renderer: ${literal}'
+2022-09-29 17:53:00.7327 Trace  Scanning MessageLayoutRenderer 'Layout Renderer: ${message}'
+2022-09-29 17:53:00.7450 Trace Initializing Layout Renderer: ${literal}
+2022-09-29 17:53:00.7450 Trace Initializing Layout Renderer: ${shortdate}
+2022-09-29 17:53:00.7450 Trace Initializing Layout Renderer: ${literal}
+2022-09-29 17:53:00.7450 Trace Initializing d:/Projects/Blog-AccountOwner/Project/logs/${shortdate}_logfile.txt
+2022-09-29 17:53:00.7450 Trace FindReachableObject<NLog.Internal.IRenderable>:
+2022-09-29 17:53:00.7450 Trace Scanning SimpleLayout 'd:/Projects/Blog-AccountOwner/Project/logs/${shortdate}_logfile.txt'
+2022-09-29 17:53:00.7450 Trace  Scanning Property LayoutRenderers 'NLog.LayoutRenderers.LayoutRenderer[]' System.Collections.Generic
+2022-09-29 17:53:00.7450 Trace  Scanning LiteralLayoutRenderer 'Layout Renderer: ${literal}'
+2022-09-29 17:53:00.7450 Trace  Scanning ShortDateLayoutRenderer 'Layout Renderer: ${shortdate}'
+2022-09-29 17:53:00.7450 Trace  Scanning LiteralLayoutRenderer 'Layout Renderer: ${literal}'
+2022-09-29 17:53:00.7450 Trace Initializing FileTarget(Name=logfile)
+2022-09-29 17:53:00.7450 Trace FindReachableObject<NLog.Layouts.Layout>:
+2022-09-29 17:53:00.7450 Trace Scanning FileTarget 'FileTarget(Name=logfile)'
+2022-09-29 17:53:00.7450 Trace  Scanning Property FileName 'd:/Projects/Blog-AccountOwner/Project/logs/${shortdate}_logfile.txt' NLog.Layouts
+2022-09-29 17:53:00.7450 Trace  Scanning SimpleLayout 'd:/Projects/Blog-AccountOwner/Project/logs/${shortdate}_logfile.txt'
+2022-09-29 17:53:00.7450 Trace  Scanning Property Layout '${longdate} ${level:uppercase=true} ${message}' NLog.Layouts
+2022-09-29 17:53:00.7450 Trace  Scanning SimpleLayout '${longdate} ${level:uppercase=true} ${message}'
+2022-09-29 17:53:00.7450 Trace  Scanning Property LineEnding 'Default' NLog.Targets
+2022-09-29 17:53:00.7450 Trace FileTarget(Name=logfile) has 2 layouts
+2022-09-29 17:53:00.7848 Trace FileTarget(Name=logfile): Using appenderFactory: NLog.Internal.FileAppenders.SingleProcessFileAppender+Factory

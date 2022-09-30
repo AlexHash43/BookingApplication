@@ -10,13 +10,7 @@ namespace Entities.DataTransferObjects
 {
     public class AppointmentForUpdateDto
     {
-        [Required(ErrorMessage = "Appointment start time is required")]
-        public DateTime AppointmentStart { get; set; }
-        public DateTime AppointmentEnd { get; set; }
-        public Guid ProcedureId { get; set; }
-        public Guid DoctorId { get; set; }
-        public Guid PatientId { get; set; }
-        public DateTime CreatedOn { get; set; }
+        public DateTime UpdatedOn { get; set; }
         public AppointmentStatus Status { get; set; }
     }
 }
