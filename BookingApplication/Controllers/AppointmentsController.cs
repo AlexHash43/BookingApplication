@@ -140,7 +140,7 @@ namespace BookingApplication.Controllers
 
         //Should update apppointment status
         //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateAppointment(Guid appointmentId, Guid PatientId, [FromBody] ProcedureForUpdateDto procedure)
+        //public async Task<IActionResult> UpdateAppointment(Guid appointmentId, [FromBody] ProcedureForUpdateDto procedure)
         //{
         //    try
         //    {

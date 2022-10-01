@@ -32,6 +32,13 @@ namespace Entities
                 .WithMany(m => m.PatientAppointments)
                 .HasForeignKey(x => x.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<IdentityRole<Guid>>()
+            //    .HasData(
+            //    new IdentityRole<Guid>
+            //    {
+
+            //    }
+            //    );
             //.OnDelete(DeleteBehavior.ClientCascade);
             // modelBuilder.Entity<IdentityUserLogin<Guid>>()
             //  .HasNoKey();

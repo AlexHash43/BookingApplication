@@ -10,9 +10,11 @@ using Microsoft.AspNetCore.HttpOverrides;
 using BookingApplication.Extensions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Entities.Seeds;
 
 var builder = WebApplication.CreateBuilder(args);
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+
 
 //// allows both to access and to set up the config
 //ConfigurationManager configuration = builder.Configuration; 
@@ -26,8 +28,6 @@ builder.Services.ConfigureRepositoryWrapper();
 builder.Services.ConfigureHttpContextAccessor();
 builder.Services.ConfigureAutoMapper();
 builder.Services.ConfigureAuthentication(builder.Configuration);
-
-
 
 builder.Services.AddDbContext<AppointmentContext>(options =>
 {

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Configuration;
+using Entities.Seeds;
+using Microsoft.AspNetCore.Identity;
+using Entities.Models;
 
 namespace BookingApplication.Extensions
 {
@@ -74,10 +77,35 @@ namespace BookingApplication.Extensions
             {
                 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             }
-        public static void ConfigureAutoMapper(this IServiceCollection services)
+            public static void ConfigureAutoMapper(this IServiceCollection services)
+            {
+                services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            }
+        //find another way to implement!!!
+        public static async void ConfigureSeedData(this WebApplication host)
         {
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        }
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
 
+            try
+            {
+                var seedService = services.GetRequiredService<Seed>();
+
+                //if (seedService.Database.IsSqlServer())
+                //{
+                //    seedService.Database.Migrate();
+                //}
+
+                var userManager = services.GetRequiredService<UserManager<User>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                await Seed.SeedData(userManager, roleManager);
+            }
+            catch (Exception ex)
+            {
+                //Log some error
+                //_logger.LogError($"Seeding Data Failed: {ex.Message}");
+                //return StatusCode(500, $"Internal Server Error:{ex.Message}"); ;
+            }
+        }
     }
 }
