@@ -11,7 +11,6 @@ namespace Entities.Seeds
 {
     public static class SeedDefaultDoctors
     {
-        {
         public static async Task SeedAsync(UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
             var defaultDoctorsList = new List<User>();
