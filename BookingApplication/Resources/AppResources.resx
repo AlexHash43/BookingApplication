@@ -123,20 +123,8 @@
   <data name="LastNameMinLength" xml:space="preserve">
     <value>Numele nu poate fi mai scurt de 3 caractere sau mai lung de 60 de caractere.</value>
   </data>
-  <data name="NoExecutors" xml:space="preserve">
-    <value>Nu există utilizatori cu rol de executor.</value>
-  </data>
-  <data name="NoTaskId" xml:space="preserve">
-    <value>Această sarcină nu există.</value>
-  </data>
-  <data name="NoTasks" xml:space="preserve">
-    <value>Nu s-a putut găsi nici-o sarcină.</value>
-  </data>
   <data name="NullRole" xml:space="preserve">
     <value>Rolul nu poate fi nul.</value>
-  </data>
-  <data name="NullTask" xml:space="preserve">
-    <value>Sarcina nu poate fi nulă.</value>
   </data>
   <data name="NullUser" xml:space="preserve">
     <value>Utilizatorul nu poate fi nul.</value>
@@ -170,33 +158,6 @@
   </data>
   <data name="RoleUpdateImpossible" xml:space="preserve">
     <value>Modificarea rolului este imposibilă.</value>
-  </data>
-  <data name="TaskAlreadyExists" xml:space="preserve">
-    <value>O sarcină cu același subiect există deja.</value>
-  </data>
-  <data name="TaskCreated" xml:space="preserve">
-    <value>Sarcina a fost creată cu succes.</value>
-  </data>
-  <data name="TaskCreationImpossibleAdd" xml:space="preserve">
-    <value>Nu s-a putut adăuga sarcina dată.</value>
-  </data>
-  <data name="TaskCreationNotSaved" xml:space="preserve">
-    <value>Nu s-a putut salva sarcina dată.</value>
-  </data>
-  <data name="TaskDeleted" xml:space="preserve">
-    <value>Sarcină ștersă cu succes.</value>
-  </data>
-  <data name="TaskDoesNotExist" xml:space="preserve">
-    <value>Această sarcină nu există.</value>
-  </data>
-  <data name="TaskNotDelete" xml:space="preserve">
-    <value>Nu s-a putut șterge sarcina.</value>
-  </data>
-  <data name="TaskNoUpdate" xml:space="preserve">
-    <value>Sarcina nu a putut fi modificată. Încercați din nou.</value>
-  </data>
-  <data name="TaskUpdated" xml:space="preserve">
-    <value>Sarcina a fost modificată.</value>
   </data>
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>Un utilizator cu acest email ales există deja.</value>

@@ -1,4 +1,5 @@
 ﻿using BookingApplication.Resources;
+using Contracts;
 using Entities;
 using Entities.DataTransferObjects.RoleDtos;
 using Entities.Models.Enums;
@@ -16,11 +17,14 @@ namespace BookingApplication.Controllers
     public class RolesController : ControllerBase
     {
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
-        private readonly AppointmentContext _context;
-        public RolesController(RoleManager<IdentityRole<Guid>> roleManager, AppointmentContext context)
+        //private readonly AppointmentContext _context;
+        private readonly ILoggerManager _logger;
+
+        public RolesController(RoleManager<IdentityRole<Guid>> roleManager, AppointmentContext context, ILoggerManager loggerManager )
         {
             _roleManager = roleManager;
-            _context = context;
+            //_context = context;
+            _logger = loggerManager;
         }
 
         // GET: api/<RolesController>
@@ -59,27 +63,29 @@ namespace BookingApplication.Controllers
         {
             if (roleName == string.Empty) return BadRequest(AppResources.NullRole);
 
-            var role = await _context.Roles.Where(r => r.Name == roleName).FirstOrDefaultAsync();
-            if (role is not null) return BadRequest(AppResources.RoleAlreadyExists);
-
-            var newRole = new IdentityRole<Guid>
+            var checkRoleIfExists = await _roleManager.RoleExistsAsync(roleName.ToString());
+            if (!checkRoleIfExists)
             {
-                Name = roleName
-            };
-            var result = await _roleManager.CreateAsync(newRole);
-
-            if (result.Succeeded)
-            {
-                var roleDbList = _roleManager.Roles.ToList();
-                var roleList = roleDbList.Select(role => new RoleForReturn
+                var newRole = new IdentityRole<Guid>
                 {
-                    Id = role.Id,
-                    RoleName = role.Name
-                });
+                    Name = roleName
+                };
+                var result = await _roleManager.CreateAsync(newRole);
 
-                return Ok(new { Roles = roleList, Message = AppResources.RoleCreated });
+                if (result.Succeeded)
+                {
+                    var roleDbList = _roleManager.Roles.ToList();
+                    var roleList = roleDbList.Select(role => new RoleForReturn
+                    {
+                        Id = role.Id,
+                        RoleName = role.Name
+                    });
+
+                    return Ok(new { Roles = roleList, Message = AppResources.RoleCreated });
+                }
+                return BadRequest(AppResources.RoleCreationImpossible);
             }
-            return BadRequest(AppResources.RoleCreationImpossible);
+            return BadRequest(AppResources.RoleAlreadyExists);
         }
 
         // PUT api/<RolesController>/5
@@ -104,11 +110,16 @@ namespace BookingApplication.Controllers
         public async Task<IActionResult> DeleteRoleAsync(RoleForReturn roleModel)
         {
             if (roleModel == null) return BadRequest(AppResources.NullRole);
-            var role = await _context.Roles.FirstOrDefaultAsync(role => role.Id == roleModel.Id);
-            if (role == null) return BadRequest(AppResources.RoleDoesNotExist);
-            var result = await _roleManager.DeleteAsync(role);
-            if (!result.Succeeded) return BadRequest(AppResources.RoleDeletionImpossible);
-            return Ok(GetRoles());
+            var roleExists = await _roleManager.RoleExistsAsync(roleModel.RoleName);
+            //var role = await _context.Roles.FirstOrDefaultAsync(role => role.Id == roleModel.Id);
+            if (roleExists)
+            {
+                var role = await _roleManager.FindByNameAsync(roleModel.RoleName);
+                var result = await _roleManager.DeleteAsync(role);
+                if (!result.Succeeded) return BadRequest(AppResources.RoleDeletionImpossible);
+                return Ok(GetRoles());
+            }
+            return BadRequest(AppResources.RoleDoesNotExist);
 
         }
 
