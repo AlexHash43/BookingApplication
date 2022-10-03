@@ -1,6 +1,7 @@
 ﻿using BookingApplication.Resources;
 using Entities;
 using Entities.DataTransferObjects.RoleDtos;
+using Entities.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApplication.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class RolesController : ControllerBase
@@ -96,7 +97,6 @@ namespace BookingApplication.Controllers
                 return BadRequest();
 
             return Ok(GetRoles());
-
         }
 
         // DELETE api/<RolesController>/5
@@ -109,6 +109,34 @@ namespace BookingApplication.Controllers
             var result = await _roleManager.DeleteAsync(role);
             if (!result.Succeeded) return BadRequest(AppResources.RoleDeletionImpossible);
             return Ok(GetRoles());
+
+        }
+
+        [HttpPost("createDefaultRoles")]
+        public async Task<IActionResult> CreateDefaultRolesAsync()//this Roles roles )
+        {
+            List<IdentityRole<Guid>> newRoleList = new List<IdentityRole<Guid>>();
+            foreach (Roles roleName in Enum.GetValues(typeof(Roles)))
+            {
+                var checkRoleIfExists = await _roleManager.RoleExistsAsync(roleName.ToString());
+                if (!checkRoleIfExists)
+                {
+                    var newRole = new IdentityRole<Guid>
+                    {
+                        Name = roleName.ToString(),
+                    };
+                    var result = await _roleManager.CreateAsync(newRole);
+
+                    if (result.Succeeded)
+                    {
+                        newRoleList.Add(newRole);
+                    }
+                }               
+            }
+            //_context.SaveChangesAsync();
+            if(newRoleList.Any())
+            return Ok(new { Roles = newRoleList, Message = AppResources.RoleCreated });
+            return BadRequest(AppResources.RoleCreationImpossible);
 
         }
     }

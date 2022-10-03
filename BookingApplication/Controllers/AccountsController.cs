@@ -44,7 +44,7 @@ namespace BookingApplication.Controllers
 
 			return StatusCode(201);
 		}
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
 		[HttpPost("Registration-doctor")]
 		public async Task<IActionResult> RegisterDoctor([FromBody] UserForRegistrationDto userForRegistration)
 		{
