@@ -209,7 +209,7 @@ namespace BookingApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Update Procedure Failed: {ex.Message}");
+                _logger.LogError($"Deleting Procedure Failed: {ex.Message}");
                 return StatusCode(500, $"Internal Server Error:{ex.Message}");
             }
         }

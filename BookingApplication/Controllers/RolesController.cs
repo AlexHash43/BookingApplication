@@ -31,96 +31,175 @@ namespace BookingApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRoles()
         {
-            var roleDbList = await _roleManager.Roles.ToListAsync();
-            if (!roleDbList.Any()) return BadRequest(AppResources.RolesDoNotExist);
-            var roleList = roleDbList.Select(role => new RoleForReturn
+            try
             {
-                Id = role.Id,
-                RoleName = role.Name
-            });
+                var roleDbList = await _roleManager.Roles.ToListAsync();
+                if (roleDbList.Any())
+                {
+                    var roleList = roleDbList.Select(role => new RoleForReturn
+                    {
+                        Id = role.Id,
+                        RoleName = role.Name
+                    });
+                    _logger.LogInfo("Returned all roles from Database");
+                    return Ok(roleList);
+                }
 
-            return Ok(roleList);
+                else
+                {
+                    _logger.LogInfo("No roles in the Database");
+                    return BadRequest(AppResources.RolesDoNotExist);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"GetRoles Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
         }
 
         // GET api/<RolesController>/5
-        [HttpGet("rolid")]
+        [HttpGet("rolid:Guid")]
         public async Task<IActionResult> GetRole(Guid id)
         {
-            var userRoles = await _roleManager.Roles.Where(role => role.Id == id).ToListAsync();
-            if (!userRoles.Any()) return BadRequest(AppResources.RolesDoNotExist);
-            var roleDetails = userRoles.Select(role => new RoleForReturn
+            try
             {
-                Id = role.Id,
-                RoleName = role.Name
-            });
+                var roleDb = await _roleManager.Roles.Where(role => role.Id == id).FirstOrDefaultAsync();
+                if (roleDb != null)
+                {
+                    var roleDetails = new RoleForReturn
+                    {
+                        Id = roleDb.Id,
+                        RoleName = roleDb.Name
+                    };
+                    _logger.LogInfo("Returned all roles from Database");
+                    return Ok(roleDetails);
+                }
 
-            return Ok(roleDetails);
+                else
+                {
+                    _logger.LogInfo("No roles in the Database");
+                    return BadRequest(AppResources.RolesDoNotExist);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"GetRoles Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
         }
 
         // POST api/<RolesController>
         [HttpPost("createrole")]
         public async Task<IActionResult> CreateRoleAsync(string roleName)
         {
-            if (roleName == string.Empty) return BadRequest(AppResources.NullRole);
-
-            var checkRoleIfExists = await _roleManager.RoleExistsAsync(roleName.ToString());
-            if (!checkRoleIfExists)
-            {
-                var newRole = new IdentityRole<Guid>
+            try
+            { 
+                if (roleName == string.Empty)
                 {
-                    Name = roleName
-                };
-                var result = await _roleManager.CreateAsync(newRole);
-
-                if (result.Succeeded)
-                {
-                    var roleDbList = _roleManager.Roles.ToList();
-                    var roleList = roleDbList.Select(role => new RoleForReturn
-                    {
-                        Id = role.Id,
-                        RoleName = role.Name
-                    });
-
-                    return Ok(new { Roles = roleList, Message = AppResources.RoleCreated });
+                    _logger.LogError("Rolename sent from clioent is null");
+                    return BadRequest(AppResources.NullRole);
                 }
-                return BadRequest(AppResources.RoleCreationImpossible);
+                var checkRoleIfExists = await _roleManager.RoleExistsAsync(roleName.ToString());
+                if (!checkRoleIfExists)
+                {
+                    var newRole = new IdentityRole<Guid>
+                    {
+                        Name = roleName
+                    };
+                    var result = await _roleManager.CreateAsync(newRole);
+
+                    if (result.Succeeded)
+                    {
+                        var roleDbList = _roleManager.Roles.ToList();
+                        var roleList = roleDbList.Select(role => new RoleForReturn
+                        {
+                            Id = role.Id,
+                            RoleName = role.Name
+                        });
+
+                        return Ok(new { Roles = roleList, Message = AppResources.RoleCreated });
+                    }
+                    _logger.LogInfo($"Creating role with name {roleName} failed");
+                    return BadRequest(AppResources.RoleCreationImpossible);
+                }
+                _logger.LogInfo($"Role with name: {roleName} already exists");
+                return BadRequest(AppResources.RoleAlreadyExists);
             }
-            return BadRequest(AppResources.RoleAlreadyExists);
+            catch (Exception ex)
+            {
+                _logger.LogError($"Creating role Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
         }
 
         // PUT api/<RolesController>/5
         [HttpPut]//("{updaterole}")]
-        public async Task<IActionResult> EditRoleASync(RoleForReturn role)
+        public async Task<IActionResult> UpdateRoleAsync(RoleForReturn role)
         {
-            if (role == null) return NotFound();
-            var originalRole = await _roleManager.Roles.Where(a => a.Id == role.Id).FirstOrDefaultAsync();
-            if (originalRole == null) return NotFound();
-            originalRole.Name = role.RoleName;
-            //_context.Roles.Update(originalRole);
-            var updater = await _roleManager.UpdateAsync(originalRole);
-            //var saver = await _context.SaveChangesAsync();
-            if (!updater.Succeeded) //|| saver==0)
-                return BadRequest();
+            try
+            {
+                if (role == null)
+                {
+                    _logger.LogError("Role object sent from the client is null");
+                    return BadRequest("Role object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid role object sent from the client");
+                    return BadRequest("Invalid model object");
+                }
+                var originalRole = await _roleManager.Roles.Where(a => a.Id == role.Id).FirstOrDefaultAsync();
+                if (originalRole != null)
+                {
+                    originalRole.Name = role.RoleName;
+                    var updater = await _roleManager.UpdateAsync(originalRole);
+                    if (updater.Succeeded)
+                    {
+                        _logger.LogInfo("Returned updated role");
+                        return Ok(GetRole(role.Id));
+                    }
+                    _logger.LogInfo($"Updating role with Id {role.Id} failed");
+                    return BadRequest($"Updating role failed");
 
-            return Ok(GetRoles());
+                }
+                _logger.LogInfo($"Role with Id {role.Id} was not found in the database");
+                return NotFound("No such role in the database");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Updating role {role.RoleName} in the Database failed" );
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
+
         }
 
         // DELETE api/<RolesController>/5
         [HttpDelete]//("{id}")]
-        public async Task<IActionResult> DeleteRoleAsync(RoleForReturn roleModel)
+        public async Task<IActionResult> DeleteRoleAsync(string id)
         {
-            if (roleModel == null) return BadRequest(AppResources.NullRole);
-            var roleExists = await _roleManager.RoleExistsAsync(roleModel.RoleName);
-            //var role = await _context.Roles.FirstOrDefaultAsync(role => role.Id == roleModel.Id);
-            if (roleExists)
+            try
             {
-                var role = await _roleManager.FindByNameAsync(roleModel.RoleName);
-                var result = await _roleManager.DeleteAsync(role);
-                if (!result.Succeeded) return BadRequest(AppResources.RoleDeletionImpossible);
-                return Ok(GetRoles());
-            }
-            return BadRequest(AppResources.RoleDoesNotExist);
+                var roleEntity = await _roleManager.FindByIdAsync(id);
 
+                if (roleEntity != null)
+                {
+                    var result = await _roleManager.DeleteAsync(roleEntity);
+                    if (result.Succeeded)
+                    {
+                        return Ok(GetRoles());
+                    }
+                    return BadRequest(AppResources.RoleDeletionImpossible);
+                }
+                return BadRequest(AppResources.RoleDoesNotExist);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Delete role Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
         }
 
         [HttpPost("createDefaultRoles")]
