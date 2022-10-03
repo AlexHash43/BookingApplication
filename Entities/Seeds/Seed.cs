@@ -18,7 +18,6 @@ namespace Entities.Seeds
             await SeedDefaultAdmin.SeedAsync(userManager, roleManager);
             await SeedDefaultDoctors.SeedAsync(userManager, roleManager);
             await SeedDefaultPatients.SeedAsync(userManager, roleManager);
-
         }
         //    //Seed Roles
         //    await roleManager.CreateAsync(new IdentityRole<Guid>(Roles.SuperAdmin.ToString()));

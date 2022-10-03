@@ -29,10 +29,10 @@ namespace BookingApplication.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("AppointmentId");
 
-                    b.Property<DateTime>("AppointmentTime")
+                    b.Property<DateTime>("AppointmentEnd")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedOn")
+                    b.Property<DateTime>("AppointmentStart")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -49,6 +49,9 @@ namespace BookingApplication.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -132,10 +135,6 @@ namespace BookingApplication.Migrations
                     b.Property<string>("FirstName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("FullName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(50)

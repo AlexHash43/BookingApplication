@@ -22,8 +22,5 @@ namespace Entities.DataTransferObjects
         public AppointmentStatus Status { get; set; }
         public string? Description { get; set; }
 
-        //public ProcedureDto? AppointmentProcedure { get; set; }
-        //public User? DoctorAppointment { get; set; }
-        //public User? PatientAppointment { get; set; }
     }
 }
