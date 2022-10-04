@@ -20,7 +20,7 @@ namespace BookingApplication.Controllers
         //private readonly AppointmentContext _context;
         private readonly ILoggerManager _logger;
 
-        public RolesController(RoleManager<IdentityRole<Guid>> roleManager, AppointmentContext context, ILoggerManager loggerManager )
+        public RolesController(RoleManager<IdentityRole<Guid>> roleManager, AppointmentContext context, ILoggerManager loggerManager)
         {
             _roleManager = roleManager;
             //_context = context;
@@ -50,7 +50,7 @@ namespace BookingApplication.Controllers
                     _logger.LogInfo("No roles in the Database");
                     return BadRequest(AppResources.RolesDoNotExist);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -60,8 +60,8 @@ namespace BookingApplication.Controllers
         }
 
         // GET api/<RolesController>/5
-        [HttpGet("rolid:Guid")]
-        public async Task<IActionResult> GetRole(Guid id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRole( Guid id)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace BookingApplication.Controllers
         }
 
         // POST api/<RolesController>
-        [HttpPost("createrole")]
+        [HttpPost("create-role")]
         public async Task<IActionResult> CreateRoleAsync(string roleName)
         {
             try
@@ -136,7 +136,7 @@ namespace BookingApplication.Controllers
         }
 
         // PUT api/<RolesController>/5
-        [HttpPut]//("{updaterole}")]
+        [HttpPut("updaterole")]
         public async Task<IActionResult> UpdateRoleAsync(RoleForReturn role)
         {
             try
@@ -177,7 +177,7 @@ namespace BookingApplication.Controllers
         }
 
         // DELETE api/<RolesController>/5
-        [HttpDelete]//("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoleAsync(string id)
         {
             try
@@ -202,7 +202,7 @@ namespace BookingApplication.Controllers
             }
         }
 
-        [HttpPost("createDefaultRoles")]
+        [HttpPost("create-default-roles")]
         public async Task<IActionResult> CreateDefaultRolesAsync()//this Roles roles )
         {
             List<IdentityRole<Guid>> newRoleList = new List<IdentityRole<Guid>>();

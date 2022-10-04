@@ -47,7 +47,7 @@ namespace BookingApplication.Controllers
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
-        [HttpGet("{id:Guid}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetProcedureById(Guid id)
         {
             try
@@ -62,7 +62,7 @@ namespace BookingApplication.Controllers
                 else
                 {
                     _logger.LogInfo($"No procedure with Id: {id} was found in the Database");
-                    return BadRequest();
+                    return NotFound();
                 }
 
             }
@@ -72,7 +72,7 @@ namespace BookingApplication.Controllers
                 return StatusCode(500, $"Internal Server Error:{ex.Message}");
             }
         }
-        [HttpGet("{procedureName}")]
+        [HttpGet("{procedure}")]
         public async Task<IActionResult> GetProcedureByName(string procedureName)
         {
             try
@@ -87,7 +87,7 @@ namespace BookingApplication.Controllers
                 else
                 {
                     _logger.LogInfo($"No procedure with Name: {procedureName} was found in the Database");
-                    return BadRequest();
+                    return NotFound();
                 }
 
             }

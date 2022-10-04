@@ -34,71 +34,107 @@ namespace BookingApplication.Controllers
         }
 
             [HttpGet]
-            [ProducesResponseType(StatusCodes.Status200OK)]
-            [ProducesResponseType(StatusCodes.Status400BadRequest)]
             public async Task<IActionResult> GetUsers()
             {
-                var userDbList = await _userManager.Users.ToListAsync();
-
-                if (userDbList is null) return BadRequest(AppResources.UsersDoNotExist);
-            var userList = _mapper.Map<List<GetUserDto>>(userDbList);
-
-            return Ok(userList);
+                try
+                {   
+                    var userDbList = await _userManager.Users.ToListAsync();
+                    if (userDbList.Any())
+                    {
+                        _logger.LogInfo("Returned all users from Database");
+                        var userList = _mapper.Map<List<GetUserDto>>(userDbList);
+                        return Ok(userList);
+                    }
+                    else
+                    {
+                        _logger.LogInfo("No users in the Database");
+                        return BadRequest();
+                    }
+                                        
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"GetUsers Failed: {ex.Message}");
+                    return StatusCode(500, $"Internal Server Error: {ex.Message}");
+                }
             }
 
             [HttpGet("{id}")]
-            [ProducesResponseType(StatusCodes.Status200OK)]
-            [ProducesResponseType(StatusCodes.Status400BadRequest)]
             public async Task<IActionResult> GetDetailedUser(Guid id)
+            {
+            try
             {
                 var userDb = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == id);
 
-            //if (userDb is null) return BadRequest(AppResources.UsersDoNotExist);
-                if (userDb is null) return NotFound(userDb);
-
-                var roles = await _userManager.GetRolesAsync(userDb);
-                return Ok(new GetUserDetailsDto
+                if (userDb != null)
                 {
-                    Id = userDb.Id,
-                    FirstName = userDb.FirstName,
-                    LastName = userDb.LastName,
-                    UserName = userDb.UserName,
-                    //FullName = userDb.FullName,
-                    Email = userDb.Email,
-                    Address = userDb.Address,
-                    PhoneNumber = userDb.PhoneNumber,
-                    Roles = await _userManager.GetRolesAsync(userDb)
-                });
-                               
+                    _logger.LogInfo($"Returned user with id: {id} from Database");
+                    return Ok(new GetUserDetailsDto
+                    {
+                        Id = userDb.Id,
+                        FirstName = userDb.FirstName,
+                        LastName = userDb.LastName,
+                        UserName = userDb.UserName,
+                        Email = userDb.Email,
+                        Address = userDb.Address,
+                        PhoneNumber = userDb.PhoneNumber,
+                        Roles = await _userManager.GetRolesAsync(userDb)
+                    });
+                }
+                else
+                {
+                    _logger.LogInfo($"No user with id: {id} was found in the Database");
+                    return NotFound();
+                }
+            }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"GetDetailedUser Failed: {ex.Message}");
+                    return StatusCode(500, $"Internal Server Error:{ex.Message}");
+                }
             }
 
-            [HttpDelete]
-            [ProducesResponseType(StatusCodes.Status200OK)]
-            [ProducesResponseType(StatusCodes.Status400BadRequest)]
+            [HttpDelete("{id}")]
             async public Task<IActionResult> DeleteUser(GetUserDto getUser)
             {
-                if (getUser is null) return BadRequest(AppResources.NullUser);
+                try
+                {
+                    if (getUser != null)
+                    {
+                        var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == getUser.Id);
+                        if (user != null)
+                        {
+                            var result = await _userManager.DeleteAsync(user);
+                            if (result.Succeeded)
+                            {
+                                var userDbList = _userManager.Users.ToList();
 
-                var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == getUser.Id);
+                                if (userDbList is null) return Ok(new UserForRemovalDto { Message = AppResources.UserDeletionNoUsersLeft, User = null });
 
-                if (user is null) return BadRequest(AppResources.UserDeletionNoUserInDb);
+                                var userReturnList = _mapper.Map<GetUserDto>(userDbList);
 
-                var result = await _userManager.DeleteAsync(user);
+                                return Ok(AppResources.UserDeleted);
+                            }
+                        }
+                            return BadRequest(AppResources.UserDeletionImpossible);
+                        return BadRequest(AppResources.UserDeletionNoUserInDb);
+                    }
+                    else
+                    {
+                        return BadRequest(AppResources.NullUser);
+                    }
+                                     
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Deleting user Failed: {ex.Message}");
+                    return StatusCode(500, $"Internal Server Error:{ex.Message}");
+                }
 
-                if (!result.Succeeded) return BadRequest(AppResources.UserDeletionImpossible);
-
-                var userDbList = _userManager.Users.ToList();
-
-                if (userDbList is null) return Ok(new UserForRemovalDto { Message = AppResources.UserDeletionNoUsersLeft, User = null });
-
-                var userReturnList = _mapper.Map<GetUserDto>(userDbList);
-
-                return Ok(AppResources.UserDeleted);
             }
 
             [HttpPost("userupdate")]
-            [ProducesResponseType(StatusCodes.Status200OK)]
-            [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
             public async Task<IActionResult> ChangeUserAsync(ChangeUserDto userToChange)
             {
                 if (userToChange is null) return BadRequest(AppResources.NullUser);

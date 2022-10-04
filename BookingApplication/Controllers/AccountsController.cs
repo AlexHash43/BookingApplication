@@ -24,7 +24,7 @@ namespace BookingApplication.Controllers
 			_logger = logger;
 		}
 		[AllowAnonymous]
-		[HttpPost("Registration-patient")]
+		[HttpPost("registration-patient")]
 		public async Task<IActionResult> RegisterPatient([FromBody] UserForRegistrationDto userForRegistration)
 		{
 			if (userForRegistration == null || !ModelState.IsValid)
@@ -45,7 +45,7 @@ namespace BookingApplication.Controllers
 			return StatusCode(201);
 		}
         //[Authorize(Roles = "Admin")]
-		[HttpPost("Registration-doctor")]
+		[HttpPost("registration-doctor")]
 		public async Task<IActionResult> RegisterDoctor([FromBody] UserForRegistrationDto userForRegistration)
 		{
 			if (userForRegistration == null || !ModelState.IsValid)
@@ -65,7 +65,7 @@ namespace BookingApplication.Controllers
 			return StatusCode(201);
 		}
 
-		[HttpPost("Login")]
+		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthentication)
 		{
 			var user = await _userManager.FindByNameAsync(userForAuthentication.Email);
