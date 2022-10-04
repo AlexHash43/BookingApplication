@@ -104,23 +104,27 @@ namespace BookingApplication.Controllers
                         var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Id == getUser.Id);
                         if (user != null)
                         {
+                            _logger.LogInfo($"User with id {getUser.Id} found in the DB");
                             var result = await _userManager.DeleteAsync(user);
                             if (result.Succeeded)
                             {
+                            _logger.LogInfo($"User with id {getUser.Id} deleted from the DB");
                                 var userDbList = _userManager.Users.ToList();
 
                                 if (userDbList is null) return Ok(new UserForRemovalDto { Message = AppResources.UserDeletionNoUsersLeft, User = null });
 
                                 var userReturnList = _mapper.Map<GetUserDto>(userDbList);
-
+                                
                                 return Ok(AppResources.UserDeleted);
                             }
-                        }
                             return BadRequest(AppResources.UserDeletionImpossible);
-                        return BadRequest(AppResources.UserDeletionNoUserInDb);
+                        }
+                        _logger.LogError($"User with id: {getUser.Id}, hasn't been found in the DB.");
+                        return NotFound(AppResources.UserDeletionNoUserInDb);
                     }
                     else
                     {
+                        _logger.LogInfo("Provided user object for deletion is null");
                         return BadRequest(AppResources.NullUser);
                     }
                                      
