@@ -184,7 +184,7 @@ namespace BookingApplication.Controllers
                 var procedureEntity = await _repository.Procedure.GetProcedureByIdAsync(id);
                 if (procedureEntity == null)
                 {
-                    _logger.LogError($"Procedure with id: {id}, hasn't been found in db.");
+                    _logger.LogError($"Procedure with id: {id}, hasn't been found in the db.");
                     return NotFound();
                 }
                 //Check if there's any appointment with this procedure used

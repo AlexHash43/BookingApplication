@@ -137,36 +137,57 @@ namespace BookingApplication.Controllers
 
             }
 
-            [HttpPost("userupdate")]
+            [HttpPut("userupdate")]
 
             public async Task<IActionResult> ChangeUserAsync(ChangeUserDto userToChange)
             {
-                if (userToChange is null) return BadRequest(AppResources.NullUser);
-
-                var user = _userManager.Users.FirstOrDefault(user => user.Id == userToChange.Id);
-
-                if (user is null) return BadRequest(AppResources.UserDoesNotExist);
-
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                if
-                (
-                    user.Email == userToChange.Email
-                    && user.UserName == userToChange.UserName
-                    && user.FirstName == userToChange.FirstName
-                    && user.LastName == userToChange.LastName
-                ) return BadRequest(AppResources.UserModificationSameData);
-
-
-               var result = await _userRepository.UpdateUserAsync(user, userToChange);
-
-                if (!result.Succeeded) return BadRequest(AppResources.UserEditImpossible);
-                else
+                try
                 {
-                    var userDbList = _userManager.Users.ToList();
-                    var userReturnList = _mapper.Map<GetUserDto>(userDbList);
+                    if (userToChange is null)
+                    {
+                        _logger.LogError("User object sent from the client is null");
+                        return BadRequest(AppResources.NullUser);
+                    }
+                    var user = _userManager.Users.FirstOrDefault(user => user.Id == userToChange.Id);
 
-                return Ok(new { Users = userReturnList, Message = "User updated with success" });
+                    if (user is null)
+                    {
+                    _logger.LogError($"User with id: {userToChange.Id} was not found in the database");
+                        return NotFound(AppResources.UserDoesNotExist);
+                    }
+                    //var userRoles = await _userManager.GetRolesAsync(user);
+                    if
+                    (
+                        user.Email == userToChange.Email
+                        && user.UserName == userToChange.UserName
+                        && user.FirstName == userToChange.FirstName
+                        && user.LastName == userToChange.LastName
+                    )
+                    {
+                        _logger.LogInfo("Provided data for changing user are the same as values from the database");
+                        return BadRequest(AppResources.UserModificationSameData);
+                    }
+
+                    var result = await _userRepository.UpdateUserAsync(user, userToChange);
+
+                    if (!result.Succeeded)
+                    {
+                        _logger.LogInfo($"Update user with id {userToChange.Id} hasn't succeeded");
+                        return BadRequest(AppResources.UserEditImpossible);
+                    }
+                    else
+                    {
+                    var userDb = _userManager.Users.FirstOrDefault(user => user.Id == userToChange.Id);
+                    var userReturn = _mapper.Map<GetUserDto>(userDb);
+
+                    return Ok(new { Users = userReturn, Message = "User updated with success" });
+                    //return Ok($"User with id {userToChange.Id} updated with success");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Update user Failed: {ex.Message}");
+                    return StatusCode(500, $"Internal Server Error:{ex.Message}");
                 }
             }
     }
