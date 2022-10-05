@@ -117,6 +117,7 @@ namespace BookingApplication.Controllers
                                 
                                 return Ok(AppResources.UserDeleted);
                             }
+                            _logger.LogInfo($"No user with id: {getUser.Id} was found in the database");
                             return BadRequest(AppResources.UserDeletionImpossible);
                         }
                         _logger.LogError($"User with id: {getUser.Id}, hasn't been found in the DB.");
