@@ -138,47 +138,85 @@ namespace BookingApplication.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAppointment(Guid id)
+        {
+            try
+            {
+                var appointmentEntity = await _repository.Appointment.GetAppointmentByIdAsync(id);
+                if (appointmentEntity == null)
+                {
+                    _logger.LogError($"Appointment with id: '{id}' not found in the db.");
+                    return NotFound("Appointment not found");
+                }
+                //Check if there's any appointment with this procedure used
+
+                //if (_repository.Appointment.AccountsByOwner(id).Any())
+                //{
+                //    _logger.LogError($"Cannot delete owner with id: {id}. It has related accounts. Delete those accounts first");
+                //    return BadRequest("Cannot delete owner. It has related accounts. Delete those accounts first");
+                //}
+                _repository.Appointment.Delete(appointmentEntity);
+                var result = await _repository.SaveAsync();
+                if (result != 0)
+                {
+                    _logger.LogInfo($"Appointment: '{appointmentEntity.Id}' successfully deleted from the database");
+                    return Ok($"Appointment: '{appointmentEntity.Id}' successfully deleted from the database");
+                }
+                else
+                {
+                    _logger.LogInfo($"Deleting appointment {appointmentEntity.Id} in the Database failed ");
+                    return BadRequest($"Deleting appointment {appointmentEntity.Id} in the Database failed ");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Deleting appoitnment Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
+        }
+
         //Should update apppointment status
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateAppointment(Guid appointmentId, [FromBody] ProcedureForUpdateDto procedure)
-        //{
-        //    try
-        //    {
-        //        if (procedure == null)
-        //        {
-        //            _logger.LogError("Procedure object sent from the client is null");
-        //            return BadRequest("Procedure object is null");
-        //        }
-        //        if (!ModelState.IsValid)
-        //        {
-        //            _logger.LogError("Invalid procedure object sent from the client");
-        //            return BadRequest("Invalid model object");
-        //        }
-        //        var procedureEntity = await _repository.Procedure.GetProcedureByIdAsync(id);
-        //        if (procedureEntity is null)
-        //        {
-        //            _logger.LogError($"Procedure with id: {id}, hasn't been found in db.");
-        //            return NotFound();
-        //        }
-        //        _mapper.Map(procedure, procedureEntity);
-        //        _repository.Procedure.Update(procedureEntity);
-        //        var result = await _repository.SaveAsync();
-        //        if (result != 0)
-        //        {
-        //            var procedureResult = _mapper.Map<ProcedureDto>(procedureEntity);
-        //            return Ok(procedureResult);
-        //        }
-        //        else
-        //        {
-        //            _logger.LogInfo($"Updating procedure {procedureEntity.ProcedureName} in the Database failed ");
-        //            return BadRequest();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"Update Procedure Failed: {ex.Message}");
-        //        return StatusCode(500, $"Internal Server Error:{ex.Message}");
-        //    }
-        //}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAppointment(Guid appointmentId, [FromBody] AppointmentForUpdateDto appointmentUpd)
+        {
+            try
+            {
+                if (appointmentUpd == null)
+                {
+                    _logger.LogError("Appointment object sent from the client is null");
+                    return BadRequest("Appointment object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid Appointment object sent from the client");
+                    return BadRequest("Invalid Appointment model object");
+                }
+                var appointmentEntity = await _repository.Appointment.GetAppointmentByIdAsync(appointmentId);
+                if (appointmentEntity is null)
+                {
+                    _logger.LogError($"Appointment with id: {appointmentId}, hasn't been found in db.");
+                    return NotFound();
+                }
+                _mapper.Map(appointmentUpd, appointmentEntity);
+                _repository.Appointment.Update(appointmentEntity);
+                var result = await _repository.SaveAsync();
+                if (result != 0)
+                {
+                    var procedureResult = _mapper.Map<AppointmentDto>(appointmentEntity);
+                    return Ok(procedureResult);
+                }
+                else
+                {
+                    _logger.LogInfo($"Updating Appointment {appointmentEntity.Id} in the Database failed ");
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Update Appointment Failed: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error:{ex.Message}");
+            }
+        }
     }
 }

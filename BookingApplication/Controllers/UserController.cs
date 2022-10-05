@@ -139,7 +139,6 @@ namespace BookingApplication.Controllers
             }
 
             [HttpPut("userupdate")]
-
             public async Task<IActionResult> ChangeUserAsync(ChangeUserDto userToChange)
             {
                 try

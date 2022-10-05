@@ -113,6 +113,7 @@ namespace BookingApplication.Controllers
 
                     if (result.Succeeded)
                     {
+                        _logger.LogInfo($"Role {roleName} Created with success");
                         var roleDbList = _roleManager.Roles.ToList();
                         var roleList = roleDbList.Select(role => new RoleForReturn
                         {
